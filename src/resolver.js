@@ -33,8 +33,8 @@ const resolvers = {
         });
         const token = jsonwebtoken.sign(
           { id: user.id },
-          `  ${process.env.JWT_SECRET_KEY}`,
-          { expiresIn: "150000" }
+          process.env.JWT_SECRET,
+          { expiresIn: "1500000000000000" }
         );
         return {
           token,
@@ -43,28 +43,29 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-    async OTPVerify(_, { otp }) {
+
+    async newTripRequest(
+      root,
+      {
+        customername,
+        customersurname,
+        customercellphone,
+        customerlocation,
+        customerdestination,
+        status,
+      }
+    ) {
       try {
-        const user = await models.User.findOne({
-          where: { otp },
-          order: [["createdAt", "DESC"]],
+        await models.Trips.create({
+          customername,
+          customersurname,
+          customercellphone,
+          customerlocation,
+          customerdestination,
+          status,
         });
 
-        if (!user) {
-          throw new Error("Incorrect  OTP");
-        }
-        /* const userOTP = await models.User.findOne({ where: { otp } });
-
-        if (!userOTP) {
-          throw new Error("Incorrect OTP");
-        } */
-        /*  jsonwebtoken.verify(token, `${process.env.JWT_SECRET_KEY}`, function(err, decoded) {
-          console.log(decoded.foo) // bar
-        }); */
-        return {
-          user,
-          message: "Authenticated!",
-        };
+        return "Succesfully Requested, Awaiting Driver Response";
       } catch (error) {
         throw new Error(error.message);
       }
@@ -72,24 +73,3 @@ const resolvers = {
   },
 };
 module.exports = resolvers;
-/* async registerUser(root, { username, acceptedtcs, cellphone, password }) {
-      try {
-        const user = await models.User.create({
-          username,
-          cellphone,
-          password: await bcrypt.hash(password, 10),
-          acceptedtcs,
-        });
-        const token = jsonwebtoken.sign(
-          { id: user.id, cellphone: user.cellphone },
-          `  ${process.env.JWT_SECRET_KEY}`,
-          { expiresIn: "1y" }
-        );
-        return {
-          token,
-          message: "Succesfull",
-        };
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    }, */
