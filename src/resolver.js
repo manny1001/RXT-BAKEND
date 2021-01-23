@@ -34,7 +34,7 @@ const resolvers = {
         const token = jsonwebtoken.sign(
           { id: user.id },
           process.env.JWT_SECRET,
-          { expiresIn: "1500000000000000" }
+          { expiresIn: "10" }
         );
         return {
           token,

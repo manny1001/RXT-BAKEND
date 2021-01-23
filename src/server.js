@@ -2,9 +2,13 @@ const { ApolloServer } = require("apollo-server");
 const jwt = require("jsonwebtoken");
 const typeDefs = require("./schema");
 const resolvers = require("./resolver");
+const cors = require("cors");
+const express = require("express");
+const app = express();
 require("dotenv").config();
 const { JWT_SECRET, PORT } = process.env;
 const getUser = (token) => {
+  console.log(token);
   try {
     if (token) {
       return jwt.verify(token, JWT_SECRET);
@@ -14,12 +18,14 @@ const getUser = (token) => {
     return null;
   }
 };
+app.use(cors());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
   context: ({ req }) => {
     const token = req.get("Authorization") || "";
-    return { user: getUser(token.replace("Bearer", "")) };
+
+    return { user: getUser(token.replace("Bearer ", "")) };
   },
   introspection: true,
   playground: true,

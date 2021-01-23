@@ -1,16 +1,16 @@
 const { gql } = require("apollo-server");
 const typeDefs = gql`
   type User {
-    id: Int!
-    username: String!
-    email: String!
-    cellphone: String!
-    otp: String!
-    homeaddress: String!
-    workaddress: String!
-    picture: String!
-    acceptedtcs: String!
-    totalrequests: String!
+    id: Int
+    username: String
+    email: String
+    cellphone: String
+    otp: String
+    homeaddress: String
+    workaddress: String
+    picture: String
+    acceptedtcs: String
+    totalrequests: String
   }
   type Driver {
     id: Int!
@@ -54,7 +54,7 @@ const typeDefs = gql`
     currentDriver: Driver
   }
   type Mutation {
-    login(cellphone: String!, otp: String!): UserAuthPayload
+    login(cellphone: String!): UserAuthPayload
     newTripRequest(
       customername: String!
       customersurname: String!
