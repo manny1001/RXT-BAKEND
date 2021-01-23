@@ -26,26 +26,44 @@ const resolvers = {
     },
   },
   Mutation: {
-    async login(_, { cellphone, otp }) {
+    async login(_, { cellphone }) {
       try {
-        const user = await models.User.findOne({ where: { cellphone } });
-        if (!user) {
-          throw new Error("No user with that cellphone");
-        }
-        const userOTP = await models.User.findOne({ where: { otp } });
-
-        if (!userOTP) {
-          throw new Error("Incorrect OTP");
-        }
+        const user = await models.User.create({
+          cellphone,
+        });
         const token = jsonwebtoken.sign(
           { id: user.id },
-          process.env.JWT_SECRET,
+          `  ${process.env.JWT_SECRET_KEY}`,
           { expiresIn: "150000" }
         );
         return {
           token,
+        };
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    async OTPVerify(_, { otp }) {
+      try {
+        const user = await models.User.findOne({
+          where: { otp },
+          order: [["createdAt", "DESC"]],
+        });
+
+        if (!user) {
+          throw new Error("Incorrect  OTP");
+        }
+        /* const userOTP = await models.User.findOne({ where: { otp } });
+
+        if (!userOTP) {
+          throw new Error("Incorrect OTP");
+        } */
+        /*  jsonwebtoken.verify(token, `${process.env.JWT_SECRET_KEY}`, function(err, decoded) {
+          console.log(decoded.foo) // bar
+        }); */
+        return {
           user,
-          message: "Succesfull",
+          message: "Authenticated!",
         };
       } catch (error) {
         throw new Error(error.message);

@@ -2,7 +2,7 @@ const { gql } = require("apollo-server");
 const typeDefs = gql`
   type User {
     id: Int!
-    username: String
+    username: String!
     email: String!
     cellphone: String!
     otp: String!
@@ -25,7 +25,6 @@ const typeDefs = gql`
   }
   type UserAuthPayload {
     token: String!
-    user: User!
   }
   type Query {
     user(id: Int!): User
@@ -36,7 +35,8 @@ const typeDefs = gql`
     currentDriver: Driver
   }
   type Mutation {
-    login(cellphone: String!, otp: String!): UserAuthPayload
+    login(cellphone: String!): UserAuthPayload!
+    OTPVerify( otp : String! ) :  UserAuthPayload!
   }
 `;
 module.exports = typeDefs;
