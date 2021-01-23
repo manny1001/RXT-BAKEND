@@ -23,6 +23,25 @@ const typeDefs = gql`
     acceptedtcs: String!
     totalrequests: String!
   }
+  type Trips {
+    customername: String
+    customersurname: String
+    customercellphone: String
+    customerlocation: String
+    customerdestination: String
+    total: String
+    fee: String
+    tip: String
+    status: String
+    rating: String
+    drivername: String
+    driversurname: String
+    driverregistration: String
+    carmodel: String
+    driverresponsetime: String
+    driverarrivaltime: String
+    drivercustomerarrivaltime: String
+  }
   type UserAuthPayload {
     token: String!
     user: User!
@@ -37,6 +56,14 @@ const typeDefs = gql`
   }
   type Mutation {
     login(cellphone: String!, otp: String!): UserAuthPayload
+    newTripRequest(
+      customername: String!
+      customersurname: String!
+      customercellphone: String!
+      customerlocation: String!
+      customerdestination: String!
+      status: String!
+    ): String
   }
 `;
 module.exports = typeDefs;
