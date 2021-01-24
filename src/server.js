@@ -8,7 +8,6 @@ const app = express();
 require("dotenv").config();
 const { JWT_SECRET, PORT } = process.env;
 const getUser = (token) => {
-  console.log(token);
   try {
     if (token) {
       return jwt.verify(token, JWT_SECRET);

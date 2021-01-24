@@ -55,6 +55,14 @@ const typeDefs = gql`
   }
   type Mutation {
     login(cellphone: String!): UserAuthPayload
+    updateProfile(
+      id: String!
+      username: String
+      email: String
+      cellphone: String
+      homeaddress: String
+      workaddress: String
+    ): String
     newTripRequest(
       customername: String!
       customersurname: String!

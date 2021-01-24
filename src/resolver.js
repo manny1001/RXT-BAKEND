@@ -34,7 +34,7 @@ const resolvers = {
         const token = jsonwebtoken.sign(
           { id: user.id },
           process.env.JWT_SECRET,
-          { expiresIn: "10" }
+          { expiresIn: "1d" }
         );
         return {
           token,
@@ -43,7 +43,27 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-
+    async updateProfile(
+      _,
+      { id, username, email, cellphone, homeaddress, workaddress }
+    ) {
+      try {
+        await models.User.update(
+          {
+            id,
+            username,
+            email,
+            cellphone,
+            homeaddress,
+            workaddress,
+          },
+          { where: { id: id } }
+        );
+        return "Success";
+      } catch {
+        (err) => console.log(err);
+      }
+    },
     async newTripRequest(
       root,
       {
