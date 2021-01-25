@@ -24,6 +24,14 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
+    async allDrivers(root, args, { user }) {
+      try {
+        if (!user) throw new Error("You are not authenticated!");
+        return models.Driver.findAll();
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
   },
   Mutation: {
     async login(_, { cellphone }) {

@@ -1,7 +1,7 @@
 ("use strict");
 module.exports = (sequelize, DataTypes) => {
   const Driver = sequelize.define(
-    "driver",
+    "Driver",
     {
       name: {
         type: DataTypes.STRING,
@@ -18,6 +18,8 @@ module.exports = (sequelize, DataTypes) => {
       homeaddress: {
         type: DataTypes.STRING,
       },
+      registration: { type: DataTypes.STRING },
+      model: { type: DataTypes.STRING },
       picture: {
         type: DataTypes.STRING,
       },

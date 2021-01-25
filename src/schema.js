@@ -13,15 +13,17 @@ const typeDefs = gql`
     totalrequests: String
   }
   type Driver {
-    id: Int!
-    name: String!
-    surname: String!
-    cellphone: String!
-    email: String!
-    homeaddress: String!
-    picture: String!
-    acceptedtcs: String!
-    totalrequests: String!
+    id: Int
+    name: String
+    surname: String
+    cellphone: String
+    email: String
+    homeaddress: String
+    registration: String
+    model : String
+    picture: String
+    acceptedtcs: String
+    totalrequests: String
   }
   type Trips {
     customername: String
@@ -50,7 +52,7 @@ const typeDefs = gql`
     allUsers: [User!]!
     currentUser: User
     driver(id: Int!): Driver
-    allDrivers: [Driver!]!
+    allDrivers: [Driver]
     currentDriver: Driver
   }
   type Mutation {
