@@ -24,7 +24,7 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-    async allDrivers(root, args, { user }) {
+    async allDriver(root, args, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
         return models.Driver.findAll();
@@ -74,23 +74,16 @@ const resolvers = {
     },
     async newTripRequest(
       root,
-      {
-        customername,
-        customersurname,
-        customercellphone,
-        customerlocation,
-        customerdestination,
-        status,
-      }
+      { username, cellphone, location, destination, paymentmethod }
     ) {
       try {
         await models.Trips.create({
-          customername,
-          customersurname,
-          customercellphone,
-          customerlocation,
-          customerdestination,
-          status,
+          username,
+          cellphone,
+          location,
+          destination,
+          paymentmethod,
+          status: "Pending Driver",
         });
 
         return "Succesfully Requested, Awaiting Driver Response";

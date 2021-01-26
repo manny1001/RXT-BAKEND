@@ -20,26 +20,25 @@ const typeDefs = gql`
     email: String
     homeaddress: String
     registration: String
-    model : String
+    model: String
     picture: String
     acceptedtcs: String
     totalrequests: String
   }
   type Trips {
-    customername: String
-    customersurname: String
-    customercellphone: String
-    customerlocation: String
-    customerdestination: String
+    username: String
+    cellphone: String
+    location: String
+    destination: String
     total: String
-    fee: String
     tip: String
+    paymentmethod: String
     status: String
     rating: String
     drivername: String
     driversurname: String
     driverregistration: String
-    carmodel: String
+    model: String
     driverresponsetime: String
     driverarrivaltime: String
     drivercustomerarrivaltime: String
@@ -52,7 +51,7 @@ const typeDefs = gql`
     allUsers: [User!]!
     currentUser: User
     driver(id: Int!): Driver
-    allDrivers: [Driver]
+    allDriver: [Driver]
     currentDriver: Driver
   }
   type Mutation {
@@ -66,12 +65,11 @@ const typeDefs = gql`
       workaddress: String
     ): String
     newTripRequest(
-      customername: String!
-      customersurname: String!
-      customercellphone: String!
-      customerlocation: String!
-      customerdestination: String!
-      status: String!
+      username: String!
+      cellphone: String!
+      location: String!
+      destination: String!
+      paymentmethod: String!
     ): String
   }
 `;
