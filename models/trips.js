@@ -3,7 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define(
     "Trips",
     {
+      uuidTrip: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       username: DataTypes.STRING,
+      uuidUser: DataTypes.STRING,
       cellphone: DataTypes.STRING,
       location: DataTypes.STRING,
       destination: DataTypes.STRING,
@@ -13,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.STRING,
       rating: DataTypes.STRING,
       drivername: DataTypes.STRING,
+      uuidDriver: DataTypes.STRING,
       driversurname: DataTypes.STRING,
       driverregistration: DataTypes.STRING,
       model: DataTypes.STRING,

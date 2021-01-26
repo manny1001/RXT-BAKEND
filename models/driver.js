@@ -3,6 +3,10 @@ module.exports = (sequelize, DataTypes) => {
   const Driver = sequelize.define(
     "Driver",
     {
+      uuid: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
       name: {
         type: DataTypes.STRING,
       },

@@ -2,6 +2,7 @@ const { gql } = require("apollo-server");
 const typeDefs = gql`
   type User {
     id: Int
+    uuid: String
     username: String
     email: String
     cellphone: String
@@ -14,6 +15,7 @@ const typeDefs = gql`
   }
   type Driver {
     id: Int
+    uuid: String
     name: String
     surname: String
     cellphone: String
@@ -26,6 +28,8 @@ const typeDefs = gql`
     totalrequests: String
   }
   type Trips {
+    uuidTrip: String
+    uuidUser: String
     username: String
     cellphone: String
     location: String
@@ -35,6 +39,7 @@ const typeDefs = gql`
     paymentmethod: String
     status: String
     rating: String
+    uuidDriver: String
     drivername: String
     driversurname: String
     driverregistration: String
@@ -45,6 +50,7 @@ const typeDefs = gql`
   }
   type UserAuthPayload {
     token: String!
+    user: User
   }
   type Query {
     user(id: Int!): User
@@ -65,11 +71,12 @@ const typeDefs = gql`
       workaddress: String
     ): String
     newTripRequest(
-      username: String!
-      cellphone: String!
-      location: String!
-      destination: String!
-      paymentmethod: String!
+      uuid: String
+      username: String
+      cellphone: String
+      location: String
+      destination: String
+      paymentmethod: String
     ): String
   }
 `;

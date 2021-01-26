@@ -5,7 +5,9 @@ const resolvers = require("./resolver");
 const cors = require("cors");
 const express = require("express");
 const app = express();
+const { sequelize } = require("../models/index");
 require("dotenv").config();
+
 const { JWT_SECRET, PORT } = process.env;
 const getUser = (token) => {
   try {

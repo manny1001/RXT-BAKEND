@@ -27,7 +27,7 @@ const resolvers = {
     async allDriver(root, args, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
-        return models.Driver.findAll();
+        return models.Driver.findAll({ where: { status: "Online" } });
       } catch (error) {
         throw new Error(error.message);
       }
@@ -74,10 +74,11 @@ const resolvers = {
     },
     async newTripRequest(
       root,
-      { username, cellphone, location, destination, paymentmethod }
+      { uuid, username, cellphone, location, destination, paymentmethod }
     ) {
       try {
         await models.Trips.create({
+          uuidUser: uuid,
           username,
           cellphone,
           location,
