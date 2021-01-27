@@ -115,7 +115,7 @@ const resolvers = {
     },
     async newTripRequest(
       root,
-      { uuid, username, cellphone, location, destination, paymentmethod }
+      { uuid, username, cellphone, location, destination }
     ) {
       try {
         await models.Trips.create({
@@ -124,13 +124,31 @@ const resolvers = {
           cellphone,
           location,
           destination,
-          paymentmethod,
           status: "Pending Driver",
         });
 
         return "Succesfully Requested, Awaiting Driver Response";
       } catch (error) {
         throw new Error(error.message);
+      }
+    },
+    async TripCardPaymentCashConfirmation(
+      _,
+      { uuidTrip, total, paymentMethod }
+    ) {
+      try {
+        console.log("testing");
+        await models.Trips.update(
+          {
+            total,
+            paymentmethod: paymentMethod,
+            status: paymentMethod === "Cash" ? "Confirmed" : "Paid,Confirmed",
+          },
+          { where: { uuidTrip: uuidTrip } }
+        );
+        return "Success, Awaiting Driver...";
+      } catch {
+        (err) => console.log(err);
       }
     },
   },

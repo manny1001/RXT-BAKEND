@@ -18,6 +18,7 @@ const typeDefs = gql`
     uuid: String
     name: String
     surname: String
+    status: String
     cellphone: String
     email: String
     homeaddress: String
@@ -79,7 +80,11 @@ const typeDefs = gql`
       cellphone: String
       location: String
       destination: String
-      paymentmethod: String
+    ): String
+    TripCardPaymentCashConfirmation(
+      uuidTrip: String
+      total: String
+      paymentMethod: String
     ): String
   }
 `;
