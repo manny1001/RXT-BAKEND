@@ -141,8 +141,7 @@ const resolvers = {
         await models.Trips.update(
           {
             total,
-            paymentmethod: paymentMethod,
-            status: paymentMethod === "Cash" ? "Confirmed" : "Paid,Confirmed",
+            paymentmethod: "Confirmed",
           },
           { where: { uuidTrip: uuidTrip } }
         );
