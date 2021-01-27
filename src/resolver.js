@@ -27,28 +27,69 @@ const resolvers = {
     async allDriver(root, args, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
-        return models.Driver.findAll({ where: { status: "Online" } });
+        return models.Driver.findAll();
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    async getDriverRequestResponse(root, { uuidUser }, { user }) {
+      try {
+        if (!user) throw new Error("You are not authenticated!");
+        const userTrip = await models.Trips.findAll({
+          limit: 1,
+          where: { uuidUser, status: "Pending Payment" },
+          order: [["createdAt", "DESC"]],
+        });
+
+        if (userTrip[0] === undefined) return {};
+        /* console.log(userTrip[0]); */
+        return userTrip[0].dataValues;
       } catch (error) {
         throw new Error(error.message);
       }
     },
   },
+  /* entries[0].data; */
   Mutation: {
     async login(_, { cellphone }) {
-      try {
-        const user = await models.User.create({
-          cellphone,
-        });
-        const token = jsonwebtoken.sign(
-          { id: user.id },
-          process.env.JWT_SECRET,
-          { expiresIn: "1d" }
-        );
-        return {
-          token,
-        };
-      } catch (error) {
-        throw new Error(error.message);
+      const CurrentUser = await models.User.findAll({ where: { cellphone } });
+
+      if (CurrentUser.length === 1) {
+        console.log(CurrentUser[0].dataValues.id);
+        try {
+          const token = jsonwebtoken.sign(
+            { id: CurrentUser[0].dataValues.id },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "2d",
+            }
+          );
+          return {
+            token,
+          };
+        } catch (error) {
+          throw new Error(error.message);
+        }
+      }
+
+      if (CurrentUser.length === 0) {
+        try {
+          const user = await models.User.create({
+            cellphone,
+          });
+          const token = jsonwebtoken.sign(
+            { id: user.id },
+            process.env.JWT_SECRET,
+            {
+              expiresIn: "2d",
+            }
+          );
+          return {
+            token,
+          };
+        } catch (error) {
+          throw new Error(error.message);
+        }
       }
     },
     async updateProfile(

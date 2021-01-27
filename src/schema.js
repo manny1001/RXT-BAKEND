@@ -28,6 +28,7 @@ const typeDefs = gql`
     totalrequests: String
   }
   type Trips {
+    id: String
     uuidTrip: String
     uuidUser: String
     username: String
@@ -50,6 +51,7 @@ const typeDefs = gql`
   }
   type UserAuthPayload {
     token: String!
+    refreshToken: String!
     user: User
   }
   type Query {
@@ -59,6 +61,7 @@ const typeDefs = gql`
     driver(id: Int!): Driver
     allDriver: [Driver]
     currentDriver: Driver
+    getDriverRequestResponse(uuidUser: String!): Trips
   }
   type Mutation {
     login(cellphone: String!): UserAuthPayload
