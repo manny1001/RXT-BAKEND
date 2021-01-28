@@ -38,7 +38,7 @@ const resolvers = {
         const userTrip = await models.Trips.findAll({
           limit: 1,
           where: { uuidUser, status: "Pending Payment" },
-          order: [["createdAt", "DESC"]],
+          order: [["updatedAt", "DESC"]],
         });
 
         if (userTrip[0] === undefined) return {};
@@ -138,7 +138,6 @@ const resolvers = {
       { uuidTrip, totalAmount, paymentMethod }
     ) {
       try {
-        console.log("testing");
         await models.Trips.update(
           {
             totalAmount,
@@ -147,6 +146,22 @@ const resolvers = {
           { where: { uuidTrip: uuidTrip } }
         );
         return "Success, Awaiting Driver...";
+      } catch {
+        (err) => console.log(err);
+      }
+    },
+    async selectNewDriver(_, { driveruuid, useruuid }) {
+      try {
+        await models.Trips.update(
+          {
+            uuidDriver: driveruuid,
+          },
+          {
+            where: { uuidUser: useruuid, status: "Pending Driver" },
+            order: [["updatedAt", "DESC"]],
+          }
+        );
+        return "Succesfully Re-Requested, Awaiting Driver Response";
       } catch {
         (err) => console.log(err);
       }
