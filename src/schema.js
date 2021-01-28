@@ -36,7 +36,7 @@ const typeDefs = gql`
     cellphone: String
     location: String
     destination: String
-    total: String
+    totalAmount: String
     tip: String
     paymentmethod: String
     status: String
@@ -80,10 +80,15 @@ const typeDefs = gql`
       cellphone: String
       location: String
       destination: String
+      uuidDriver: String
+      drivername: String
+      driversurname: String
+      driverregistration: String
+      model: String
     ): String
     TripCardPaymentCashConfirmation(
       uuidTrip: String
-      total: String
+      totalAmount: String
       paymentMethod: String
     ): String
   }

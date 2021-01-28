@@ -115,7 +115,7 @@ const resolvers = {
     },
     async newTripRequest(
       root,
-      { uuid, username, cellphone, location, destination }
+      { uuid, username, cellphone, location, destination, uuidDriver }
     ) {
       try {
         await models.Trips.create({
@@ -124,6 +124,7 @@ const resolvers = {
           cellphone,
           location,
           destination,
+          uuidDriver,
           status: "Pending Driver",
         });
 
@@ -134,13 +135,13 @@ const resolvers = {
     },
     async TripCardPaymentCashConfirmation(
       _,
-      { uuidTrip, total, paymentMethod }
+      { uuidTrip, totalAmount, paymentMethod }
     ) {
       try {
         console.log("testing");
         await models.Trips.update(
           {
-            total,
+            totalAmount,
             paymentmethod: "Confirmed",
           },
           { where: { uuidTrip: uuidTrip } }
