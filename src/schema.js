@@ -91,7 +91,6 @@ const typeDefs = gql`
       totalAmount: String
       paymentMethod: String
     ): String
-
     selectNewDriver(driveruuid: String, useruuid: String): String
   }
 `;
