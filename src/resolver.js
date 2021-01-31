@@ -48,8 +48,24 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
+    async getRequestHistory(root, { uuidUser }, { user }) {
+      try {
+        if (!user) throw new Error("You are not authenticated!");
+        const userTrips = await models.Trips.findAll({
+          where: {
+            uuidUser,
+            status: ["Complete", "Cancelled", "Active"],
+          },
+        });
+        return userTrips;
+        /*  if (userTrip[0] === undefined) return {};
+
+        return userTrip[0].dataValues; */
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
   },
-  /* entries[0].data; */
   Mutation: {
     async login(_, { cellphone }) {
       const CurrentUser = await models.User.findAll({ where: { cellphone } });
