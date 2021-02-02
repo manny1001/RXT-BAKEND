@@ -1,7 +1,7 @@
 ("use strict");
 module.exports = (sequelize, DataTypes) => {
-  const Driver = sequelize.define(
-    "Driver",
+  const Drivers = sequelize.define(
+    "Drivers",
     {
       uuid: {
         type: DataTypes.UUID,
@@ -13,20 +13,18 @@ module.exports = (sequelize, DataTypes) => {
       surname: {
         type: DataTypes.STRING,
       },
-      status: {
-        type: DataTypes.STRING,
-      },
       cellphone: {
         type: DataTypes.STRING,
       },
       email: {
         type: DataTypes.STRING,
       },
+      status: {
+        type: DataTypes.STRING,
+      },
       homeaddress: {
         type: DataTypes.STRING,
       },
-      registration: { type: DataTypes.STRING },
-      model: { type: DataTypes.STRING },
       picture: {
         type: DataTypes.STRING,
       },
@@ -36,8 +34,11 @@ module.exports = (sequelize, DataTypes) => {
       totalrequests: {
         type: DataTypes.STRING,
       },
+      registration: { type: DataTypes.STRING },
+      model: { type: DataTypes.STRING },
+      gender: { type: DataTypes.STRING },
     },
     {}
   );
-  return Driver;
+  return Drivers;
 };

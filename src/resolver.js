@@ -8,6 +8,10 @@ const resolvers = {
       if (!user) throw new Error("You are not authenticated");
       return await models.User.findByPk(user.id);
     },
+    async currentDriver(_, args, { user }) {
+      if (!user) throw new Error("You are not authenticated");
+      return await models.Drivers.findByPk(user.id);
+    },
     async user(root, { id }, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
@@ -27,22 +31,21 @@ const resolvers = {
     async allDriver(root, args, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
-        return models.Driver.findAll();
+        return models.Drivers.findAll();
       } catch (error) {
         throw new Error(error.message);
       }
     },
-    async getDriverRequestResponse(root, { uuidUser }, { user }) {
+    async getDriverRequestResponse(root, { uuidUser, status }, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
         const userTrip = await models.Trips.findAll({
           limit: 1,
-          where: { uuidUser, status: "Pending Payment" },
+          where: { uuidUser, status },
           order: [["updatedAt", "DESC"]],
         });
 
         if (userTrip[0] === undefined) return {};
-        /* console.log(userTrip[0]); */
         return userTrip[0].dataValues;
       } catch (error) {
         throw new Error(error.message);
@@ -58,53 +61,122 @@ const resolvers = {
           },
         });
         return userTrips;
-        /*  if (userTrip[0] === undefined) return {};
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
 
-        return userTrip[0].dataValues; */
+    async getCurrentRequest(root, { uuidDriver }, { user }) {
+      try {
+        if (!user) throw new Error("You are not authenticated!");
+        const currentRequest = await models.Trips.findAll({
+          limit: 1,
+          where: {
+            uuidDriver,
+            status: ["Pending Driver", "Pending Payment", "Paid,WaitingDriver"],
+          },
+        });
+        return currentRequest;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    async getDriversLocation(root, { uuidDriver }, { user }) {
+      try {
+        if (!user) throw new Error("You are not authenticated!");
+        const currentRequest = await models.Trips.findAll({
+          limit: 1,
+          where: {
+            uuidDriver,
+            status: "On-Route,Pickup",
+          },
+        });
+        return currentRequest;
       } catch (error) {
         throw new Error(error.message);
       }
     },
   },
   Mutation: {
-    async login(_, { cellphone }) {
-      const CurrentUser = await models.User.findAll({ where: { cellphone } });
-
-      if (CurrentUser.length === 1) {
-        console.log(CurrentUser[0].dataValues.id);
-        try {
-          const token = jsonwebtoken.sign(
-            { id: CurrentUser[0].dataValues.id },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "2d",
-            }
-          );
-          return {
-            token,
-          };
-        } catch (error) {
-          throw new Error(error.message);
+    async login(_, { cellphone, type }) {
+      if (type === "Driver") {
+        const CurrentDriver = await models.Drivers.findAll({
+          where: { cellphone },
+        });
+        if (CurrentDriver.length === 1) {
+          try {
+            const token = jsonwebtoken.sign(
+              { id: CurrentDriver[0].dataValues.id },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "2d",
+              }
+            );
+            return {
+              token,
+            };
+          } catch (error) {
+            throw new Error(error.message);
+          }
         }
-      }
+        if (CurrentDriver.length === 0) {
+          try {
+            const CurrentDriver = await models.Drivers.create({
+              cellphone,
+            });
 
-      if (CurrentUser.length === 0) {
-        try {
-          const user = await models.User.create({
-            cellphone,
-          });
-          const token = jsonwebtoken.sign(
-            { id: user.id },
-            process.env.JWT_SECRET,
-            {
-              expiresIn: "2d",
-            }
-          );
-          return {
-            token,
-          };
-        } catch (error) {
-          throw new Error(error.message);
+            const token = jsonwebtoken.sign(
+              { id: CurrentDriver.id },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "2d",
+              }
+            );
+            return {
+              token,
+            };
+          } catch (error) {
+            throw new Error(error.message);
+          }
+        }
+      } else {
+        const CurrentUser = await models.User.findAll({ where: { cellphone } });
+
+        if (CurrentUser.length === 1) {
+          try {
+            const token = jsonwebtoken.sign(
+              { id: CurrentUser[0].dataValues.id },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "2d",
+              }
+            );
+            return {
+              token,
+            };
+          } catch (error) {
+            throw new Error(error.message);
+          }
+        }
+
+        if (CurrentUser.length === 0) {
+          try {
+            const user = await models.User.create({
+              cellphone,
+            });
+            const token = jsonwebtoken.sign(
+              { id: user.id },
+              process.env.JWT_SECRET,
+              {
+                expiresIn: "2d",
+              }
+            );
+            return {
+              token,
+            };
+          } catch (error) {
+            throw new Error(error.message);
+          }
         }
       }
     },
@@ -182,6 +254,38 @@ const resolvers = {
           }
         );
         return "Succesfully Re-Requested, Awaiting Driver Response";
+      } catch {
+        (err) => console.log(err);
+      }
+    },
+    async UpdateDriverStatus(_, { driveruuid, status }) {
+      try {
+        await models.Drivers.update(
+          {
+            status,
+          },
+          {
+            where: { uuid: driveruuid },
+          }
+        );
+        return "Succesfully updated";
+      } catch {
+        (err) => console.log(err);
+      }
+    },
+    async newRequestResponse(_, { uuidDriver, status }) {
+      try {
+        await models.Trips.update(
+          {
+            status: status,
+          },
+          {
+            where: {
+              uuidDriver,
+            },
+          }
+        );
+        return "Success";
       } catch {
         (err) => console.log(err);
       }

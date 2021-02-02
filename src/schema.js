@@ -14,19 +14,19 @@ const typeDefs = gql`
     totalrequests: String
   }
   type Driver {
-    id: Int
     uuid: String
     name: String
     surname: String
-    status: String
     cellphone: String
     email: String
+    status: String
     homeaddress: String
-    registration: String
-    model: String
     picture: String
     acceptedtcs: String
     totalrequests: String
+    registration: String
+    model: String
+    gender: String
   }
   type Trips {
     id: String
@@ -42,6 +42,7 @@ const typeDefs = gql`
     status: String
     rating: String
     uuidDriver: String
+    driversLiveLocation: String
     drivername: String
     driversurname: String
     driverregistration: String
@@ -53,7 +54,6 @@ const typeDefs = gql`
   type UserAuthPayload {
     token: String!
     refreshToken: String!
-    user: User
   }
   type UserHistory {
     uuidTrip: String
@@ -79,11 +79,13 @@ const typeDefs = gql`
     driver(id: Int!): Driver
     allDriver: [Driver]
     currentDriver: Driver
-    getDriverRequestResponse(uuidUser: String!): Trips
+    getDriverRequestResponse(uuidUser: String!, status: String!): Trips
     getRequestHistory(uuidUser: String!): [UserHistory]
+    getCurrentRequest(uuidDriver: String!): [Trips]
+    getDriversLocation(uuidDriver: String!): [Trips]
   }
   type Mutation {
-    login(cellphone: String!): UserAuthPayload
+    login(cellphone: String!, type: String!): UserAuthPayload
     updateProfile(
       id: String!
       username: String
@@ -110,6 +112,8 @@ const typeDefs = gql`
       paymentMethod: String
     ): String
     selectNewDriver(driveruuid: String, useruuid: String): String
+    UpdateDriverStatus(driveruuid: String, status: String): String
+    newRequestResponse(uuidDriver: String, status: String): String
   }
 `;
 module.exports = typeDefs;
