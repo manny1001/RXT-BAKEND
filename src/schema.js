@@ -79,7 +79,7 @@ const typeDefs = gql`
     driver(id: Int!): Driver
     allDriver: [Driver]
     currentDriver: Driver
-    getDriverRequestResponse(uuidUser: String!, status: String!): Trips
+    getDriverRequestResponse(uuidUser: String!): Trips
     getRequestHistory(uuidUser: String!): [UserHistory]
     getCurrentRequest(uuidDriver: String!): [Trips]
     getDriversLocation(uuidDriver: String!): [Trips]

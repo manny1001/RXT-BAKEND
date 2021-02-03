@@ -36,12 +36,15 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-    async getDriverRequestResponse(root, { uuidUser, status }, { user }) {
+    async getDriverRequestResponse(root, { uuidUser }, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
         const userTrip = await models.Trips.findAll({
           limit: 1,
-          where: { uuidUser, status },
+          where: {
+            uuidUser,
+            status: ["Pending Payment", "Declined"],
+          },
           order: [["updatedAt", "DESC"]],
         });
 
@@ -73,7 +76,12 @@ const resolvers = {
           limit: 1,
           where: {
             uuidDriver,
-            status: ["Pending Driver", "Pending Payment", "Paid,WaitingDriver"],
+            status: [
+              "Pending Driver",
+              "Pending Payment",
+              "Paid,WaitingDriver",
+              "On-Route,Pickup",
+            ],
           },
         });
         return currentRequest;
