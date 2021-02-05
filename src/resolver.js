@@ -97,7 +97,7 @@ const resolvers = {
           limit: 1,
           where: {
             uuidUser,
-            status: ["On-Route,Pickup", "Arrived", "Completed"],
+            status: ["On-Route,Pickup", "Arrived", "Complete"],
           },
         });
         return currentRequest;
@@ -213,6 +213,20 @@ const resolvers = {
           { where: { uuid: uuidUser } }
         );
         return "Successfully Updated";
+      } catch {
+        (err) => console.log(err);
+      }
+    },
+    async updateUserName(_, { uuidUser, username }) {
+      console.log(uuidUser, username);
+      try {
+        await models.User.update(
+          {
+            username,
+          },
+          { where: { uuid: uuidUser } }
+        );
+        return "Successfully Updated UserName";
       } catch {
         (err) => console.log(err);
       }

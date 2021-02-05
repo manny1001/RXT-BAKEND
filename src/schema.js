@@ -94,6 +94,7 @@ const typeDefs = gql`
       homeaddress: String
       workaddress: String
     ): String
+    updateUserName(uuidUser: String!, username: String!): String
     newTripRequest(
       uuid: String
       username: String
