@@ -81,6 +81,7 @@ const resolvers = {
               "Pending Payment",
               "Paid,WaitingDriver",
               "On-Route,Pickup",
+              "Confirmed,WaitingDriver",
             ],
           },
         });
@@ -89,14 +90,14 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-    async getDriversLocation(root, { uuidDriver }, { user }) {
+    async getDriversLocation(root, { uuidUser }, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
         const currentRequest = await models.Trips.findAll({
           limit: 1,
           where: {
-            uuidDriver,
-            status: "On-Route,Pickup",
+            uuidUser,
+            status: ["On-Route,Pickup", "Arrived", "Completed"],
           },
         });
         return currentRequest;
@@ -190,21 +191,28 @@ const resolvers = {
     },
     async updateProfile(
       _,
-      { id, username, email, cellphone, homeaddress, workaddress }
+      { uuidUser, username, email, cellphone, homeaddress, workaddress }
     ) {
+      console.log(
+        uuidUser,
+        username,
+        email,
+        cellphone,
+        homeaddress,
+        workaddress
+      );
       try {
         await models.User.update(
           {
-            id,
             username,
             email,
             cellphone,
             homeaddress,
             workaddress,
           },
-          { where: { id: id } }
+          { where: { uuid: uuidUser } }
         );
-        return "Success";
+        return "Successfully Updated";
       } catch {
         (err) => console.log(err);
       }

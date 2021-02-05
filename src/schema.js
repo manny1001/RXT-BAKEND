@@ -82,12 +82,12 @@ const typeDefs = gql`
     getDriverRequestResponse(uuidUser: String!): Trips
     getRequestHistory(uuidUser: String!): [UserHistory]
     getCurrentRequest(uuidDriver: String!): [Trips]
-    getDriversLocation(uuidDriver: String!): [Trips]
+    getDriversLocation(uuidUser: String!): [Trips]
   }
   type Mutation {
     login(cellphone: String!, type: String!): UserAuthPayload
     updateProfile(
-      id: String!
+      uuidUser: String!
       username: String
       email: String
       cellphone: String
