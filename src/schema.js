@@ -42,13 +42,14 @@ const typeDefs = gql`
     status: String
     rating: String
     uuidDriver: String
+    driverImage: String
     driversLiveLocation: String
     drivername: String
     driversurname: String
     driverregistration: String
     model: String
-    driverresponsetime: String
-    driverarrivaltime: String
+    driverduration: String
+    driverremainingtime: String
     drivercustomerarrivaltime: String
   }
   type UserAuthPayload {
@@ -82,7 +83,7 @@ const typeDefs = gql`
     getDriverRequestResponse(uuidUser: String!): Trips
     getRequestHistory(uuidUser: String!): [UserHistory]
     getCurrentRequest(uuidDriver: String!): [Trips]
-    getDriversLocation(uuidUser: String!): [Trips]
+    getDriversLocation(uuidUser: String): [Trips]
   }
   type Mutation {
     login(cellphone: String!, type: String!): UserAuthPayload

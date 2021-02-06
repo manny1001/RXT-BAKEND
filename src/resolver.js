@@ -97,7 +97,13 @@ const resolvers = {
           limit: 1,
           where: {
             uuidUser,
-            status: ["On-Route,Pickup", "Arrived", "Complete"],
+            status: [
+              "On-Route,Pickup",
+              "Arrived",
+              "Complete",
+              "Confirmed,WaitingDriver",
+              "Paid,WaitingDriver",
+            ],
           },
         });
         return currentRequest;
