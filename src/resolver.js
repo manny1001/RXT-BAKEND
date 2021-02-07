@@ -252,6 +252,15 @@ const resolvers = {
           status: "Pending Driver",
         });
 
+        await models.Drivers.update(
+          {
+            status: "Offline",
+          },
+          {
+            where: { uuid: uuidDriver },
+          }
+        );
+
         return "Succesfully Requested, Awaiting Driver Response";
       } catch (error) {
         throw new Error(error.message);
