@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       driversLiveLocation: DataTypes.STRING,
       drivername: DataTypes.STRING,
       uuidDriver: DataTypes.STRING,
+      driversCellphone: DataTypes.STRING,
       driverImage: DataTypes.STRING,
       driversurname: DataTypes.STRING,
       driverregistration: DataTypes.STRING,

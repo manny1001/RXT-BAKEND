@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
 const models = require("../models");
+const nodemailer = require("nodemailer");
 require("dotenv").config();
 const resolvers = {
   Query: {
@@ -31,7 +32,11 @@ const resolvers = {
     async allDriver(root, args, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
-        return models.Drivers.findAll();
+        return models.Drivers.findAll({
+          where: {
+            status: ["Online"],
+          },
+        });
       } catch (error) {
         throw new Error(error.message);
       }
@@ -334,6 +339,35 @@ const resolvers = {
       } catch {
         (err) => console.log(err);
       }
+    },
+    async alertEmail(_, { uuidTrip, message, status }) {
+      async function main() {
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: "Emmanuelmuya@gmail.com",
+            pass: "@Emman1000",
+          },
+        });
+
+        const mailOptions = {
+          from: "Emmanuelmuya@gmail.com",
+          to: "Emmanuelmuya@gmail.com",
+          subject: "Ticket" + status,
+          text: message + " " + uuidTrip,
+        };
+
+        console.log("Message sent");
+
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
+        });
+      }
+      main();
     },
   },
 };

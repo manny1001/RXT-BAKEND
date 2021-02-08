@@ -14,6 +14,7 @@ const typeDefs = gql`
     totalrequests: String
   }
   type Driver {
+    id: String
     uuid: String
     name: String
     surname: String
@@ -42,6 +43,7 @@ const typeDefs = gql`
     status: String
     rating: String
     uuidDriver: String
+    driversCellphone: String
     driverImage: String
     driversLiveLocation: String
     drivername: String
@@ -116,6 +118,7 @@ const typeDefs = gql`
     selectNewDriver(driveruuid: String, useruuid: String): String
     UpdateDriverStatus(driveruuid: String, status: String): String
     newRequestResponse(uuidDriver: String, status: String): String
+    alertEmail(uuidTrip: String, message: String, status: String): String
   }
 `;
 module.exports = typeDefs;
