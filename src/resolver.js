@@ -116,21 +116,53 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-    async getMessages(root, { tripuuid, uuid }, { user }) {
+    async messages(root, arg, { user }) {
+      const { uuidtrip, uuid } = arg;
       try {
         if (!user) throw new Error("You are not authenticated!");
-        const currentChat = await models.Chats.findAll({
+        const currentMessage = await models.Message.findAll({
           where: {
-            tripuuid,
+            uuidtrip,
+            uuid,
           },
         });
-        return currentChat;
+        return currentMessage;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+  },
+  Message: {
+    user: async (Message) => {
+      try {
+        const user = await models.User.findAll({
+          limit: 1,
+          where: {
+            uuid: Message.dataValues.uuid,
+          },
+        });
+        console.log("here is ypur user", user[0].dataValues, "user ends here");
+        return user[0].dataValues;
       } catch (error) {
         throw new Error(error.message);
       }
     },
   },
   Mutation: {
+    async postMessage(_, { text, image, video, uuid, uuidtrip }, {}) {
+      try {
+        await models.Message.create({
+          text,
+          image,
+          video,
+          uuid,
+          uuidtrip,
+        });
+        return "Message Sent";
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
     async login(_, { cellphone, type }) {
       if (type === "Driver") {
         const CurrentDriver = await models.Drivers.findAll({
@@ -217,14 +249,6 @@ const resolvers = {
       _,
       { uuidUser, username, email, cellphone, homeaddress, workaddress }
     ) {
-      console.log(
-        uuidUser,
-        username,
-        email,
-        cellphone,
-        homeaddress,
-        workaddress
-      );
       try {
         await models.User.update(
           {

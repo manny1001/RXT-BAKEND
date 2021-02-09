@@ -1,4 +1,5 @@
 const { gql } = require("apollo-server");
+
 const typeDefs = gql`
   type User {
     id: Int
@@ -74,10 +75,14 @@ const typeDefs = gql`
     driverregistration: String
     model: String
   }
-  type Messages {
+  type Message {
     _id: String!
     text: String!
-    user: [User!]!
+    image: String
+    video: String
+    uuidtrip: String!
+    uuid: String!
+    user: User
   }
   type Query {
     user(id: Int!): User
@@ -90,8 +95,19 @@ const typeDefs = gql`
     getRequestHistory(uuidUser: String!): [UserHistory]
     getCurrentRequest(uuidDriver: String!): [Trips]
     getDriversLocation(uuidUser: String): [Trips]
+    messages(uuidtrip: String, uuid: String): [Message]
+  }
+  type GetMessages {
+    user: [User]
   }
   type Mutation {
+    postMessage(
+      text: String!
+      image: String
+      video: String
+      uuid: String
+      uuidtrip: String!
+    ): String
     login(cellphone: String!, type: String!): UserAuthPayload
     updateProfile(
       uuidUser: String!
