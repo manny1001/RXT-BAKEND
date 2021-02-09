@@ -74,7 +74,11 @@ const typeDefs = gql`
     driverregistration: String
     model: String
   }
-
+  type Messages {
+    _id: String!
+    text: String!
+    user: [User!]!
+  }
   type Query {
     user(id: Int!): User
     allUsers: [User!]!

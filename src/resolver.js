@@ -116,6 +116,19 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
+    async getMessages(root, { tripuuid, uuid }, { user }) {
+      try {
+        if (!user) throw new Error("You are not authenticated!");
+        const currentChat = await models.Chats.findAll({
+          where: {
+            tripuuid,
+          },
+        });
+        return currentChat;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
   },
   Mutation: {
     async login(_, { cellphone, type }) {
