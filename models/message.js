@@ -4,24 +4,29 @@ module.exports = (sequelize, DataTypes) => {
     "Message",
     {
       _id: {
+        primaryKey: true,
         type: DataTypes.INTEGER,
+        autoIncrement: true,
       },
       text: {
         type: DataTypes.STRING,
       },
-      createdAt: {
+      /*   createdAt: {
         type: DataTypes.STRING,
-      },
+      }, */
       image: {
         type: DataTypes.STRING,
       },
       video: {
         type: DataTypes.STRING,
       },
-      uuid: {
+      uuidDriver: {
         type: DataTypes.STRING,
       },
-      uuid: {
+      uuidUser: {
+        type: DataTypes.STRING,
+      },
+      uuidtrip: {
         type: DataTypes.STRING,
       },
     },

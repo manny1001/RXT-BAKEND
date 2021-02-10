@@ -7,7 +7,7 @@ const express = require("express");
 const app = express();
 const { sequelize } = require("../models/index");
 require("dotenv").config();
-/* sequelize.sync(); */
+sequelize.sync();
 const { JWT_SECRET, PORT } = process.env;
 const getUser = (token, refreshToken) => {
   try {

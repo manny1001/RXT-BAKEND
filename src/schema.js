@@ -2,7 +2,7 @@ const { gql } = require("apollo-server");
 
 const typeDefs = gql`
   type User {
-    id: Int
+    _id: Int
     uuid: String
     username: String
     email: String
@@ -15,7 +15,7 @@ const typeDefs = gql`
     totalrequests: String
   }
   type Driver {
-    id: String
+    _id: String
     uuid: String
     name: String
     surname: String
@@ -81,7 +81,8 @@ const typeDefs = gql`
     image: String
     video: String
     uuidtrip: String!
-    uuid: String!
+    uuidUser: String!
+    uuidDriver: String!
     user: User
   }
   type Query {
@@ -95,7 +96,7 @@ const typeDefs = gql`
     getRequestHistory(uuidUser: String!): [UserHistory]
     getCurrentRequest(uuidDriver: String!): [Trips]
     getDriversLocation(uuidUser: String): [Trips]
-    messages(uuidtrip: String, uuid: String): [Message]
+    messages(uuidtrip: String, uuidUser: String, uuidDriver: String): [Message]
   }
   type GetMessages {
     user: [User]

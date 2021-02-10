@@ -52,7 +52,7 @@ const resolvers = {
           },
           order: [["updatedAt", "DESC"]],
         });
-
+        console.log(userTrip);
         if (userTrip[0] === undefined) return {};
         return userTrip[0].dataValues;
       } catch (error) {
@@ -117,15 +117,17 @@ const resolvers = {
       }
     },
     async messages(root, arg, { user }) {
-      const { uuidtrip, uuid } = arg;
+      const { uuidtrip, uuidUser, uuidDriver } = arg;
       try {
         if (!user) throw new Error("You are not authenticated!");
         const currentMessage = await models.Message.findAll({
           where: {
             uuidtrip,
-            uuid,
+            uuidUser,
+            uuidDriver,
           },
         });
+
         return currentMessage;
       } catch (error) {
         throw new Error(error.message);
@@ -138,10 +140,9 @@ const resolvers = {
         const user = await models.User.findAll({
           limit: 1,
           where: {
-            uuid: Message.dataValues.uuid,
+            uuid: Message.dataValues.uuidUser,
           },
         });
-        console.log("here is ypur user", user[0].dataValues, "user ends here");
         return user[0].dataValues;
       } catch (error) {
         throw new Error(error.message);
@@ -155,8 +156,8 @@ const resolvers = {
           text,
           image,
           video,
-          uuid,
-          uuidtrip,
+          uuid: uuid,
+          uuidtrip: uuidtrip,
         });
         return "Message Sent";
       } catch (error) {
