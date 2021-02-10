@@ -52,7 +52,7 @@ const resolvers = {
           },
           order: [["updatedAt", "DESC"]],
         });
-        console.log(userTrip);
+
         if (userTrip[0] === undefined) return {};
         return userTrip[0].dataValues;
       } catch (error) {
@@ -105,7 +105,6 @@ const resolvers = {
             status: [
               "On-Route,Pickup",
               "Arrived",
-              "Complete",
               "Confirmed,WaitingDriver",
               "Paid,WaitingDriver",
             ],
@@ -135,7 +134,6 @@ const resolvers = {
   Message: {
     user: async (Message) => {
       try {
-        console.log("1st", Message.dataValues.uuid);
         const user = await models.User.findAll({
           limit: 1,
           where: {
@@ -148,16 +146,19 @@ const resolvers = {
             uuid: Message.dataValues.uuid,
           },
         });
-        /* console.log(
-          "2nd",
-          driver && driver[0] && driver[0].dataValues,
-          user && user[0] && user[0].dataValues
-        ); */
-
-        return [
-          driver && driver[0] && driver[0].dataValues,
-          user && user[0] && user[0].dataValues,
-        ];
+        console.log(
+          typeof [
+            driver && driver[0] && driver[0].dataValues,
+            user && user[0] && user[0].dataValues,
+          ].filter(function (el) {
+            return el != null;
+          }),
+          "Oyy"
+        );
+        return {
+          ...(user && user[0] && user[0].dataValues),
+          ...(driver && driver[0] && driver[0].dataValues),
+        };
       } catch (error) {
         throw new Error(error.message);
       }
@@ -179,6 +180,7 @@ const resolvers = {
       }
     },
     async login(_, { cellphone, type }) {
+      console.log(cellphone, type);
       if (type === "Driver") {
         const CurrentDriver = await models.Drivers.findAll({
           where: { cellphone },
@@ -186,7 +188,7 @@ const resolvers = {
         if (CurrentDriver.length === 1) {
           try {
             const token = jsonwebtoken.sign(
-              { id: CurrentDriver[0].dataValues.id },
+              { id: CurrentDriver[0].dataValues._id },
               process.env.JWT_SECRET,
               {
                 expiresIn: "2d",
@@ -206,7 +208,7 @@ const resolvers = {
             });
 
             const token = jsonwebtoken.sign(
-              { id: CurrentDriver.id },
+              { id: CurrentDriver._id },
               process.env.JWT_SECRET,
               {
                 expiresIn: "2d",
@@ -221,11 +223,11 @@ const resolvers = {
         }
       } else {
         const CurrentUser = await models.User.findAll({ where: { cellphone } });
-
+        console.log(CurrentUser);
         if (CurrentUser.length === 1) {
           try {
             const token = jsonwebtoken.sign(
-              { id: CurrentUser[0].dataValues.id },
+              { id: CurrentUser[0].dataValues._id },
               process.env.JWT_SECRET,
               {
                 expiresIn: "2d",
@@ -245,7 +247,7 @@ const resolvers = {
               cellphone,
             });
             const token = jsonwebtoken.sign(
-              { id: user.id },
+              { id: user._id },
               process.env.JWT_SECRET,
               {
                 expiresIn: "2d",
@@ -296,11 +298,12 @@ const resolvers = {
     },
     async newTripRequest(
       root,
-      { uuid, name, cellphone, location, destination, uuidDriver }
+      { uuidUser, name, cellphone, location, destination, uuidDriver }
     ) {
+      console.log(uuidUser, name, cellphone, location, destination, uuidDriver);
       try {
         await models.Trips.create({
-          uuidUser: uuid,
+          uuidUser,
           name,
           cellphone,
           location,

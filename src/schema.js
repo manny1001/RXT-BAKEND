@@ -83,7 +83,7 @@ const typeDefs = gql`
     video: String
     uuidtrip: String!
     uuid: String
-    user: [User]
+    user: User
   }
   type Query {
     user(id: Int!): User
@@ -118,7 +118,7 @@ const typeDefs = gql`
     ): String
     updateUserName(uuidUser: String, name: String): String
     newTripRequest(
-      uuid: String
+      uuidUser: String
       name: String
       cellphone: String
       location: String

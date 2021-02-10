@@ -7,7 +7,7 @@ const express = require("express");
 const app = express();
 const { sequelize } = require("../models/index");
 require("dotenv").config();
-/* sequelize.sync(); */
+
 const { JWT_SECRET, PORT } = process.env;
 const getUser = (token, refreshToken) => {
   try {
@@ -26,7 +26,6 @@ const server = new ApolloServer({
   resolvers,
   context: ({ req }) => {
     const token = req.get("Authorization") || "";
-
     return { user: getUser(token.replace("Bearer ", "")) };
   },
   introspection: true,
