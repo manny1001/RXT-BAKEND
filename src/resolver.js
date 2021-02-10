@@ -117,14 +117,12 @@ const resolvers = {
       }
     },
     async messages(root, arg, { user }) {
-      const { uuidtrip, uuidUser, uuidDriver } = arg;
+      const { uuidtrip, uuid } = arg;
       try {
         if (!user) throw new Error("You are not authenticated!");
         const currentMessage = await models.Message.findAll({
           where: {
             uuidtrip,
-            uuidUser,
-            uuidDriver,
           },
         });
 
@@ -137,13 +135,29 @@ const resolvers = {
   Message: {
     user: async (Message) => {
       try {
+        console.log("1st", Message.dataValues.uuid);
         const user = await models.User.findAll({
           limit: 1,
           where: {
-            uuid: Message.dataValues.uuidUser,
+            uuid: Message.dataValues.uuid,
           },
         });
-        return user[0].dataValues;
+        const driver = await models.Drivers.findAll({
+          limit: 1,
+          where: {
+            uuid: Message.dataValues.uuid,
+          },
+        });
+        /* console.log(
+          "2nd",
+          driver && driver[0] && driver[0].dataValues,
+          user && user[0] && user[0].dataValues
+        ); */
+
+        return [
+          driver && driver[0] && driver[0].dataValues,
+          user && user[0] && user[0].dataValues,
+        ];
       } catch (error) {
         throw new Error(error.message);
       }
@@ -248,12 +262,12 @@ const resolvers = {
     },
     async updateProfile(
       _,
-      { uuidUser, username, email, cellphone, homeaddress, workaddress }
+      { uuidUser, name, email, cellphone, homeaddress, workaddress }
     ) {
       try {
         await models.User.update(
           {
-            username,
+            name,
             email,
             cellphone,
             homeaddress,
@@ -266,12 +280,12 @@ const resolvers = {
         (err) => console.log(err);
       }
     },
-    async updateUserName(_, { uuidUser, username }) {
-      console.log(uuidUser, username);
+    async updateUserName(_, { uuidUser, name }) {
+      console.log(uuidUser, name);
       try {
         await models.User.update(
           {
-            username,
+            name,
           },
           { where: { uuid: uuidUser } }
         );
@@ -282,12 +296,12 @@ const resolvers = {
     },
     async newTripRequest(
       root,
-      { uuid, username, cellphone, location, destination, uuidDriver }
+      { uuid, name, cellphone, location, destination, uuidDriver }
     ) {
       try {
         await models.Trips.create({
           uuidUser: uuid,
-          username,
+          name,
           cellphone,
           location,
           destination,

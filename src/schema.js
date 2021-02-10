@@ -4,7 +4,7 @@ const typeDefs = gql`
   type User {
     _id: Int
     uuid: String
-    username: String
+    name: String
     email: String
     cellphone: String
     otp: String
@@ -34,7 +34,7 @@ const typeDefs = gql`
     id: String
     uuidTrip: String
     uuidUser: String
-    username: String
+    name: String
     cellphone: String
     location: String
     destination: String
@@ -75,15 +75,15 @@ const typeDefs = gql`
     driverregistration: String
     model: String
   }
+
   type Message {
     _id: String!
     text: String!
     image: String
     video: String
     uuidtrip: String!
-    uuidUser: String!
-    uuidDriver: String!
-    user: User
+    uuid: String
+    user: [User]
   }
   type Query {
     user(id: Int!): User
@@ -96,11 +96,9 @@ const typeDefs = gql`
     getRequestHistory(uuidUser: String!): [UserHistory]
     getCurrentRequest(uuidDriver: String!): [Trips]
     getDriversLocation(uuidUser: String): [Trips]
-    messages(uuidtrip: String, uuidUser: String, uuidDriver: String): [Message]
+    messages(uuidtrip: String, uuid: String): [Message]
   }
-  type GetMessages {
-    user: [User]
-  }
+
   type Mutation {
     postMessage(
       text: String!
@@ -112,16 +110,16 @@ const typeDefs = gql`
     login(cellphone: String!, type: String!): UserAuthPayload
     updateProfile(
       uuidUser: String!
-      username: String
+      name: String
       email: String
       cellphone: String
       homeaddress: String
       workaddress: String
     ): String
-    updateUserName(uuidUser: String!, username: String!): String
+    updateUserName(uuidUser: String, name: String): String
     newTripRequest(
       uuid: String
-      username: String
+      name: String
       cellphone: String
       location: String
       destination: String

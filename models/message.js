@@ -11,19 +11,13 @@ module.exports = (sequelize, DataTypes) => {
       text: {
         type: DataTypes.STRING,
       },
-      /*   createdAt: {
-        type: DataTypes.STRING,
-      }, */
       image: {
         type: DataTypes.STRING,
       },
       video: {
         type: DataTypes.STRING,
       },
-      uuidDriver: {
-        type: DataTypes.STRING,
-      },
-      uuidUser: {
+      uuid: {
         type: DataTypes.STRING,
       },
       uuidtrip: {
