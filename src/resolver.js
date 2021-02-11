@@ -146,15 +146,7 @@ const resolvers = {
             uuid: Message.dataValues.uuid,
           },
         });
-        console.log(
-          typeof [
-            driver && driver[0] && driver[0].dataValues,
-            user && user[0] && user[0].dataValues,
-          ].filter(function (el) {
-            return el != null;
-          }),
-          "Oyy"
-        );
+
         return {
           ...(user && user[0] && user[0].dataValues),
           ...(driver && driver[0] && driver[0].dataValues),
