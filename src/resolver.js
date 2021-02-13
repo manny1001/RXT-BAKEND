@@ -157,7 +157,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    async postMessage(_, { text, image, video, uuid, uuidtrip }, {}) {
+    async PostMessage(_, { text, image, video, uuid, uuidtrip }, {}) {
       try {
         await models.Message.create({
           text,
@@ -172,7 +172,6 @@ const resolvers = {
       }
     },
     async login(_, { cellphone, type }) {
-      console.log(cellphone, type);
       if (type === "Driver") {
         const CurrentDriver = await models.Drivers.findAll({
           where: { cellphone },
@@ -215,7 +214,6 @@ const resolvers = {
         }
       } else {
         const CurrentUser = await models.User.findAll({ where: { cellphone } });
-        console.log(CurrentUser);
         if (CurrentUser.length === 1) {
           try {
             const token = jsonwebtoken.sign(
@@ -275,7 +273,6 @@ const resolvers = {
       }
     },
     async updateUserName(_, { uuidUser, name }) {
-      console.log(uuidUser, name);
       try {
         await models.User.update(
           {
@@ -292,7 +289,6 @@ const resolvers = {
       root,
       { uuidUser, name, cellphone, location, destination, uuidDriver }
     ) {
-      console.log(uuidUser, name, cellphone, location, destination, uuidDriver);
       try {
         await models.Trips.create({
           uuidUser,
@@ -403,8 +399,6 @@ const resolvers = {
           subject: "Ticket" + status,
           text: message + " " + uuidTrip,
         };
-
-        console.log("Message sent");
 
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
