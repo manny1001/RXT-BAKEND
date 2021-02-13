@@ -100,7 +100,7 @@ const typeDefs = gql`
   }
 
   type Mutation {
-    postMessage(
+    PostMessage(
       text: String!
       image: String
       video: String

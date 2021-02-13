@@ -157,7 +157,7 @@ const resolvers = {
     },
   },
   Mutation: {
-    async postMessage(_, { text, image, video, uuid, uuidtrip }, {}) {
+    async PostMessage(_, { text, image, video, uuid, uuidtrip }, {}) {
       try {
         await models.Message.create({
           text,
