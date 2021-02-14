@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "migrate": " sequelize db:migrate",
-    "dev": "nodemon src/server.js",
-    "start": "nodemon src/server",
+    "dev": "nodemon src/index.js",
+    "start": "nodemon src/index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -1,46 +1,58 @@
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
-const models = require("../models");
+const UserModel = require("../models");
+
 const nodemailer = require("nodemailer");
+const UserController = require("../controllers/user");
+const DriverController = require("../controllers/driver");
 require("dotenv").config();
-const resolvers = {
+module.exports = [
+  {
+    Query: {
+      currentUser: async (_, {}, { user }) => {
+        return await UserController.getUserById(user._id);
+      },
+      currentDriver: async (_, {}, { user }) => {
+        return await DriverController.getDriverById(user._id);
+      },
+      allDriver: async (_, {}, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await DriverController.getOnlineDrivers();
+      },
+    },
+
+    Mutation: {
+      login: async (_, { cellphone, type }) => {
+        console.log(cellphone, type);
+        if (type === "user") {
+          return await UserController.userLogin({ cellphone, type });
+        }
+        if (type === "driver") {
+          return await DriverController.driverLogin({ cellphone, type });
+        }
+      },
+      updateProfile: async (
+        _,
+        { uuidUser, name, email, cellphone, homeaddress, workaddress }
+      ) => {
+        UserController.updateProfile(
+          uuidUser,
+          name,
+          email,
+          cellphone,
+          homeaddress,
+          workaddress
+        );
+        return "Succesfully Updated";
+      },
+    },
+  },
+];
+/* const resolvers = {
   Query: {
-    async currentUser(_, args, { user }) {
-      if (!user) throw new Error("You are not authenticated");
-      return await models.User.findByPk(user.id);
-    },
-    async currentDriver(_, args, { user }) {
-      if (!user) throw new Error("You are not authenticated");
-      return await models.Drivers.findByPk(user.id);
-    },
-    async user(root, { id }, { user }) {
-      try {
-        if (!user) throw new Error("You are not authenticated!");
-        return models.User.findByPk(id);
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
-    async allUsers(root, args, { user }) {
-      try {
-        if (!user) throw new Error("You are not authenticated!");
-        return models.User.findAll();
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
-    async allDriver(root, args, { user }) {
-      try {
-        if (!user) throw new Error("You are not authenticated!");
-        return models.Drivers.findAll({
-          where: {
-            status: ["Online"],
-          },
-        });
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
+   
+     
+    
     async getDriverRequestResponse(root, { uuidUser }, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
@@ -130,7 +142,8 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-  },
+      },
+     
   Message: {
     user: async (Message) => {
       try {
@@ -182,7 +195,7 @@ const resolvers = {
               { id: CurrentDriver[0].dataValues._id },
               process.env.JWT_SECRET,
               {
-                expiresIn: "2d",
+                expiresIn: "3d",
               }
             );
             return {
@@ -202,7 +215,7 @@ const resolvers = {
               { id: CurrentDriver._id },
               process.env.JWT_SECRET,
               {
-                expiresIn: "2d",
+                expiresIn: "3d",
               }
             );
             return {
@@ -252,26 +265,7 @@ const resolvers = {
         }
       }
     },
-    async updateProfile(
-      _,
-      { uuidUser, name, email, cellphone, homeaddress, workaddress }
-    ) {
-      try {
-        await models.User.update(
-          {
-            name,
-            email,
-            cellphone,
-            homeaddress,
-            workaddress,
-          },
-          { where: { uuid: uuidUser } }
-        );
-        return "Successfully Updated";
-      } catch {
-        (err) => console.log(err);
-      }
-    },
+   
     async updateUserName(_, { uuidUser, name }) {
       try {
         await models.User.update(
@@ -413,3 +407,4 @@ const resolvers = {
   },
 };
 module.exports = resolvers;
+ */
