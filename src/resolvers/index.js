@@ -1,13 +1,117 @@
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
-const models = require("../models");
+const UserModel = require("../models");
 const nodemailer = require("nodemailer");
+const UserController = require("../controllers/user");
+const DriverController = require("../controllers/driver");
 require("dotenv").config();
-const resolvers = {
+module.exports = [
+  {
+    Query: {
+      currentUser: async (_, {}, { user }) => {
+        console.log(user._id);
+        return await UserController.getUserById(user._id);
+      },
+      currentDriver: async (_, {}, { driver }) => {
+        console.log(driver._id);
+        return await DriverController.getDriverById(driver._id);
+      },
+    },
+
+    Mutation: {
+      login: async (_, { cellphone, type }) => {
+        return await UserController.getAllUsers({ cellphone, type });
+
+        /* if (type === "Driver") {
+          const CurrentDriver = await models.Drivers.findAll({
+            where: { cellphone },
+          });
+          if (CurrentDriver.length === 1) {
+            try {
+              const token = jsonwebtoken.sign(
+                { id: CurrentDriver[0].dataValues._id },
+                process.env.JWT_SECRET,
+                {
+                  expiresIn: "3d",
+                }
+              );
+              return {
+                token,
+              };
+            } catch (error) {
+              throw new Error(error.message);
+            }
+          }
+          if (CurrentDriver.length === 0) {
+            try {
+              const CurrentDriver = await models.Drivers.create({
+                cellphone,
+              });
+
+              const token = jsonwebtoken.sign(
+                { id: CurrentDriver._id },
+                process.env.JWT_SECRET,
+                {
+                  expiresIn: "3d",
+                }
+              );
+              return {
+                token,
+              };
+            } catch (error) {
+              throw new Error(error.message);
+            }
+          }
+        } else */ {
+          /* console.log(CurrentUser); */
+          /* if (CurrentUser.length === 1) {
+            try {
+              const token = jsonwebtoken.sign(
+                { id: CurrentUser[0].dataValues._id },
+                process.env.JWT_SECRET,
+                {
+                  expiresIn: "2d",
+                }
+              );
+              return {
+                token,
+              };
+            } catch (error) {
+              throw new Error(error.message);
+            }
+          }
+
+          if (CurrentUser.length === 0) {
+            try {
+              const user = await models.User.create({
+                cellphone,
+              });
+              const token = jsonwebtoken.sign(
+                { id: user._id },
+                process.env.JWT_SECRET,
+                {
+                  expiresIn: "2d",
+                }
+              );
+              return {
+                token,
+              };
+            } catch (error) {
+              throw new Error(error.message);
+            }
+          } */
+        }
+      },
+    },
+  },
+];
+/* const resolvers = {
   Query: {
     async currentUser(_, args, { user }) {
-      if (!user) throw new Error("You are not authenticated");
-      return await models.User.findByPk(user.id);
+      console.log(args, user);
+      users: async () => {
+        return await models.getUserById();
+      };
     },
     async currentDriver(_, args, { user }) {
       if (!user) throw new Error("You are not authenticated");
@@ -130,7 +234,8 @@ const resolvers = {
         throw new Error(error.message);
       }
     },
-  },
+      },
+     
   Message: {
     user: async (Message) => {
       try {
@@ -182,7 +287,7 @@ const resolvers = {
               { id: CurrentDriver[0].dataValues._id },
               process.env.JWT_SECRET,
               {
-                expiresIn: "2d",
+                expiresIn: "3d",
               }
             );
             return {
@@ -202,7 +307,7 @@ const resolvers = {
               { id: CurrentDriver._id },
               process.env.JWT_SECRET,
               {
-                expiresIn: "2d",
+                expiresIn: "3d",
               }
             );
             return {
@@ -413,3 +518,4 @@ const resolvers = {
   },
 };
 module.exports = resolvers;
+ */

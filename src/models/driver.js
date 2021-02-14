@@ -1,7 +1,6 @@
-"use strict";
 module.exports = (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    "User",
+  const Driver = sequelize.define(
+    "Driver",
     {
       _id: {
         type: DataTypes.STRING,
@@ -14,19 +13,19 @@ module.exports = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING,
       },
-      email: {
-        type: DataTypes.STRING,
-      },
-      otp: {
+      surname: {
         type: DataTypes.STRING,
       },
       cellphone: {
         type: DataTypes.STRING,
       },
-      homeaddress: {
+      email: {
         type: DataTypes.STRING,
       },
-      workaddress: {
+      status: {
+        type: DataTypes.STRING,
+      },
+      homeaddress: {
         type: DataTypes.STRING,
       },
       picture: {
@@ -38,8 +37,29 @@ module.exports = (sequelize, DataTypes) => {
       totalrequests: {
         type: DataTypes.STRING,
       },
+      registration: { type: DataTypes.STRING },
+      model: { type: DataTypes.STRING },
+      gender: { type: DataTypes.STRING },
     },
     {}
   );
-  return User;
+  Driver.find = async function ({ _id = null }) {
+    const driver = await Driver.findOne({
+      where: {
+        _id,
+      },
+    });
+
+    return driver;
+  };
+
+  Driver.createUserIfNotExists = async function ({ cellphone }) {
+    const [driver, created] = await Driver.findOrCreate({
+      where: { cellphone },
+    });
+
+    return [driver, created];
+  };
+
+  return Driver;
 };
