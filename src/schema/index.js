@@ -35,7 +35,7 @@ const typeDefs = gql`
     allDriver: [Driver]
   }
   type UserAuthPayload {
-    token: String
+    token: String!
     refreshToken: String
   }
   type Mutation {

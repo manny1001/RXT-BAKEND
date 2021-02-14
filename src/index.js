@@ -29,21 +29,20 @@ const getUserFromToken = async (token) => {
 const getUserFromToken = (token) =>
   new Promise((resolve, reject) => {
     jwt.verify(token, JWT_SECRET, async (err, tokenPayload) => {
-      const { type } = tokenPayload;
+      console.log(tokenPayload && tokenPayload.type);
       if (err) {
         return reject(err);
       }
-      /*  console.log(type); */
 
-      if (type === "driver") {
+      if (tokenPayload && tokenPayload.type === "driver") {
         const driver = await DriverController.getDriverById(tokenPayload.id);
         resolve(driver);
       }
-      if (type === "user") {
+      if (tokenPayload && tokenPayload.type === "user") {
         const user = await UserController.getUserById(tokenPayload.id);
         resolve(user);
       }
-      if (!tokenPayload.type) {
+      if (tokenPayload && !tokenPayload.type) {
         const user = await UserController.getUserById(tokenPayload.id);
         resolve(user);
       }
@@ -58,12 +57,13 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     if (req.headers) {
       const token = req.get("Authorization") || "";
+      console.log(token);
       try {
         const user = await getUserFromToken(token);
 
         return { user };
       } catch (e) {
-        throw new AuthenticationError("Invalid Token");
+        /* throw new AuthenticationError("Invalid Token"); */
       }
     }
   },
