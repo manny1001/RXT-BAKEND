@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
 const UserModel = require("../models");
+
 const nodemailer = require("nodemailer");
 const UserController = require("../controllers/user");
 const DriverController = require("../controllers/driver");
@@ -9,142 +10,49 @@ module.exports = [
   {
     Query: {
       currentUser: async (_, {}, { user }) => {
-        console.log(user._id);
         return await UserController.getUserById(user._id);
       },
-      currentDriver: async (_, {}, { driver }) => {
-        console.log(driver._id);
-        return await DriverController.getDriverById(driver._id);
+      currentDriver: async (_, {}, { user }) => {
+        return await DriverController.getDriverById(user._id);
+      },
+      allDriver: async (_, {}, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await DriverController.getOnlineDrivers();
       },
     },
 
     Mutation: {
       login: async (_, { cellphone, type }) => {
-        return await UserController.getAllUsers({ cellphone, type });
-
-        /* if (type === "Driver") {
-          const CurrentDriver = await models.Drivers.findAll({
-            where: { cellphone },
-          });
-          if (CurrentDriver.length === 1) {
-            try {
-              const token = jsonwebtoken.sign(
-                { id: CurrentDriver[0].dataValues._id },
-                process.env.JWT_SECRET,
-                {
-                  expiresIn: "3d",
-                }
-              );
-              return {
-                token,
-              };
-            } catch (error) {
-              throw new Error(error.message);
-            }
-          }
-          if (CurrentDriver.length === 0) {
-            try {
-              const CurrentDriver = await models.Drivers.create({
-                cellphone,
-              });
-
-              const token = jsonwebtoken.sign(
-                { id: CurrentDriver._id },
-                process.env.JWT_SECRET,
-                {
-                  expiresIn: "3d",
-                }
-              );
-              return {
-                token,
-              };
-            } catch (error) {
-              throw new Error(error.message);
-            }
-          }
-        } else */ {
-          /* console.log(CurrentUser); */
-          /* if (CurrentUser.length === 1) {
-            try {
-              const token = jsonwebtoken.sign(
-                { id: CurrentUser[0].dataValues._id },
-                process.env.JWT_SECRET,
-                {
-                  expiresIn: "2d",
-                }
-              );
-              return {
-                token,
-              };
-            } catch (error) {
-              throw new Error(error.message);
-            }
-          }
-
-          if (CurrentUser.length === 0) {
-            try {
-              const user = await models.User.create({
-                cellphone,
-              });
-              const token = jsonwebtoken.sign(
-                { id: user._id },
-                process.env.JWT_SECRET,
-                {
-                  expiresIn: "2d",
-                }
-              );
-              return {
-                token,
-              };
-            } catch (error) {
-              throw new Error(error.message);
-            }
-          } */
+        console.log(cellphone, type);
+        if (type === "user") {
+          return await UserController.userLogin({ cellphone, type });
         }
+        if (type === "driver") {
+          return await DriverController.driverLogin({ cellphone, type });
+        }
+      },
+      updateProfile: async (
+        _,
+        { uuidUser, name, email, cellphone, homeaddress, workaddress }
+      ) => {
+        UserController.updateProfile(
+          uuidUser,
+          name,
+          email,
+          cellphone,
+          homeaddress,
+          workaddress
+        );
+        return "Succesfully Updated";
       },
     },
   },
 ];
 /* const resolvers = {
   Query: {
-    async currentUser(_, args, { user }) {
-      console.log(args, user);
-      users: async () => {
-        return await models.getUserById();
-      };
-    },
-    async currentDriver(_, args, { user }) {
-      if (!user) throw new Error("You are not authenticated");
-      return await models.Drivers.findByPk(user.id);
-    },
-    async user(root, { id }, { user }) {
-      try {
-        if (!user) throw new Error("You are not authenticated!");
-        return models.User.findByPk(id);
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
-    async allUsers(root, args, { user }) {
-      try {
-        if (!user) throw new Error("You are not authenticated!");
-        return models.User.findAll();
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
-    async allDriver(root, args, { user }) {
-      try {
-        if (!user) throw new Error("You are not authenticated!");
-        return models.Drivers.findAll({
-          where: {
-            status: ["Online"],
-          },
-        });
-      } catch (error) {
-        throw new Error(error.message);
-      }
-    },
+   
+     
+    
     async getDriverRequestResponse(root, { uuidUser }, { user }) {
       try {
         if (!user) throw new Error("You are not authenticated!");
@@ -357,26 +265,7 @@ module.exports = [
         }
       }
     },
-    async updateProfile(
-      _,
-      { uuidUser, name, email, cellphone, homeaddress, workaddress }
-    ) {
-      try {
-        await models.User.update(
-          {
-            name,
-            email,
-            cellphone,
-            homeaddress,
-            workaddress,
-          },
-          { where: { uuid: uuidUser } }
-        );
-        return "Successfully Updated";
-      } catch {
-        (err) => console.log(err);
-      }
-    },
+   
     async updateUserName(_, { uuidUser, name }) {
       try {
         await models.User.update(
