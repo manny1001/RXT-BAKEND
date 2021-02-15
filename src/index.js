@@ -12,24 +12,10 @@ const app = express();
 app.use(cors());
 
 const { JWT_SECRET, PORT } = process.env;
-/* 
-const getUserFromToken = async (token) => {
-  try {
-    if (token) {
-      const userToken = jwt.verify(token, JWT_SECRET);
-      const user = await UserController.getUserById({ _id: userToken.id });
-      return user;
-    }
 
-    return null;
-  } catch (error) {
-    return null;
-  }
-}; */
 const getUserFromToken = (token) =>
   new Promise((resolve, reject) => {
     jwt.verify(token, JWT_SECRET, async (err, tokenPayload) => {
-      console.log(tokenPayload && tokenPayload.type);
       if (err) {
         return reject(err);
       }
@@ -57,7 +43,6 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     if (req.headers) {
       const token = req.get("Authorization") || "";
-      console.log(token);
       try {
         const user = await getUserFromToken(token);
 

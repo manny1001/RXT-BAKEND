@@ -29,17 +29,42 @@ const typeDefs = gql`
     model: String
     gender: String
   }
+  type Trips {
+    id: String
+    uuidTrip: String
+    uuidUser: String
+    name: String
+    cellphone: String
+    location: String
+    destination: String
+    totalAmount: String
+    tip: String
+    paymentmethod: String
+    status: String
+    rating: String
+    uuidDriver: String
+    driversCellphone: String
+    driverImage: String
+    driversLiveLocation: String
+    drivername: String
+    driversurname: String
+    driverregistration: String
+    model: String
+    driverduration: String
+    driverremainingtime: String
+    drivercustomerarrivaltime: String
+  }
   type Query {
     currentUser: User
     currentDriver: Driver
     allDriver: [Driver]
+    driversLocation(uuidUser: String!): Trips
   }
   type UserAuthPayload {
     token: String!
-    refreshToken: String
   }
   type Mutation {
-    login(cellphone: String!, type: String!): UserAuthPayload
+    login(cellphone: String!, type: String!): UserAuthPayload!
     updateProfile(
       uuidUser: String!
       name: String

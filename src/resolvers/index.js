@@ -1,10 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jsonwebtoken = require("jsonwebtoken");
-const UserModel = require("../models");
-
 const nodemailer = require("nodemailer");
 const UserController = require("../controllers/user");
 const DriverController = require("../controllers/driver");
+const TripsController = require("../controllers/trips");
 require("dotenv").config();
 module.exports = [
   {
@@ -18,6 +17,25 @@ module.exports = [
       allDriver: async (_, {}, { user }) => {
         if (!user) throw new Error("You are not authenticated!");
         return await DriverController.getOnlineDrivers();
+      },
+      driversLocation: async (_, { uuidUser }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getDriversLocation(uuidUser);
+        /* try {
+          const userTrip = await models.Trips.findAll({
+            limit: 1,
+            where: {
+              uuidUser,
+              status: ["Pending Payment", "Declined"],
+            },
+            order: [["updatedAt", "DESC"]],
+          });
+  
+          if (userTrip[0] === undefined) return {};
+          return userTrip[0].dataValues;
+        } catch (error) {
+          throw new Error(error.message);
+        } */
       },
     },
 
