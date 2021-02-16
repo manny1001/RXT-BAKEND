@@ -4,6 +4,8 @@ const nodemailer = require("nodemailer");
 const UserController = require("../controllers/user");
 const DriverController = require("../controllers/driver");
 const TripsController = require("../controllers/trips");
+const MessagesController = require("../controllers/message");
+
 require("dotenv").config();
 module.exports = [
   {
@@ -18,27 +20,28 @@ module.exports = [
         if (!user) throw new Error("You are not authenticated!");
         return await DriverController.getOnlineDrivers();
       },
-      driversLocation: async (_, { uuidUser }, { user }) => {
+      driversLocation: async (_, { uuidUser, uuidTrip }, { user }) => {
         if (!user) throw new Error("You are not authenticated!");
-        return await TripsController.getDriversLocation(uuidUser);
-        /* try {
-          const userTrip = await models.Trips.findAll({
-            limit: 1,
-            where: {
-              uuidUser,
-              status: ["Pending Payment", "Declined"],
-            },
-            order: [["updatedAt", "DESC"]],
-          });
-  
-          if (userTrip[0] === undefined) return {};
-          return userTrip[0].dataValues;
-        } catch (error) {
-          throw new Error(error.message);
-        } */
+        return await TripsController.getDriversLocation(uuidUser, uuidTrip);
+      },
+      messages: async (_, { uuidtrip, uuid }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await MessagesController.getMessages(uuidtrip, uuid);
+      },
+      getRequestHistory: async (_, { uuidUser }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getUsersRequestHistory(uuidUser);
+      },
+      getDriverRequestResponse: async (_, { uuidUser }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getRequestResponse(uuidUser);
       },
     },
-
+    Message: {
+      user: async (Message) => {
+        return await MessagesController.getUserMessage(Message);
+      },
+    },
     Mutation: {
       login: async (_, { cellphone, type }) => {
         console.log(cellphone, type);
@@ -62,6 +65,78 @@ module.exports = [
           workaddress
         );
         return "Succesfully Updated";
+      },
+      newTripRequest: async (
+        _,
+        { uuidUser, name, cellphone, location, destination, uuidDriver },
+        {}
+      ) => {
+        return await TripsController.createNewTrip(
+          uuidUser,
+          name,
+          cellphone,
+          location,
+          destination,
+          uuidDriver
+        );
+      },
+      selectNewDriver: async (_, { driveruuid, useruuid }, {}) => {
+        return await TripsController.createNewDriver(driveruuid, useruuid);
+      },
+      TripCardPaymentCashConfirmation: async (
+        _,
+        { uuidTrip, totalAmount, paymentMethod },
+        {}
+      ) => {
+        return await TripsController.PayOrConfirm(
+          uuidTrip,
+          totalAmount,
+          paymentMethod
+        );
+      },
+      UpdateDriverStatus: async (_, { driveruuid, status }, {}) => {
+        return await DriverController.updateStatus(driveruuid, status);
+      },
+      newRequestResponse: async (_, { uuidDriver, status, uuidTrip }, {}) => {
+        return TripsController.requestResponse(uuidDriver, status, uuidTrip);
+      },
+      postMessage: async (_, { text, image, video, uuid, uuidtrip }, {}) => {
+        return await MessagesController.postMessage(
+          text,
+          image,
+          video,
+          uuid,
+          uuidtrip
+        );
+      },
+      alertEmail: async (_, { uuidTrip, message, status }, {}) => {
+        async function main() {
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: "Emmanuelmuya@gmail.com",
+              pass: "@Emman1000",
+            },
+          });
+
+          const mailOptions = {
+            from: "Emmanuelmuya@gmail.com",
+            to: "Emmanuelmuya@gmail.com",
+            subject: "Ticket" + status,
+            text: message + " " + uuidTrip,
+          };
+
+          console.log("Message sent");
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              console.log(error);
+            } else {
+              console.log("Email sent: " + info.response);
+            }
+          });
+        }
+        main();
       },
     },
   },

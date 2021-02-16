@@ -43,12 +43,13 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     if (req.headers) {
       const token = req.get("Authorization") || "";
+      console.log(req.headers);
       try {
-        const user = await getUserFromToken(token);
+        const user = await getUserFromToken(token.replace("Bearer ", ""));
 
         return { user };
       } catch (e) {
-        /* throw new AuthenticationError("Invalid Token"); */
+        throw new AuthenticationError("Invalid Token");
       }
     }
   },

@@ -59,6 +59,22 @@ class DriverController {
   static async getDriverById(driverId) {
     return await Driver.find({ _id: driverId });
   }
+  static async updateStatus(driveruuid, status) {
+    console.log(driveruuid, status);
+    try {
+      await Driver.update(
+        {
+          status,
+        },
+        {
+          where: { uuid: driveruuid },
+        }
+      );
+      return "Succesfully updated";
+    } catch {
+      (err) => console.log(err);
+    }
+  }
 }
 
 module.exports = DriverController;
