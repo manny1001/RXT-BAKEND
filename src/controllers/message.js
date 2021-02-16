@@ -31,12 +31,10 @@ class MessageController {
         },
       });
 
-      return [
-        {
-          ...(user && user[0] && user[0].dataValues),
-          ...(driver && driver[0] && driver[0].dataValues),
-        },
-      ];
+      return {
+        ...(user && user[0] && user[0].dataValues),
+        ...(driver && driver[0] && driver[0].dataValues),
+      };
     } catch (error) {
       throw new Error(error.message);
     }

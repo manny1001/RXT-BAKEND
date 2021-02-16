@@ -45,7 +45,9 @@ const server = new ApolloServer({
       const token = req.get("Authorization") || "";
       console.log(req.headers);
       try {
-        const user = await getUserFromToken(token.replace("Bearer ", ""));
+        const user = token
+          ? await getUserFromToken(token.replace("Bearer ", ""))
+          : null;
 
         return { user };
       } catch (e) {

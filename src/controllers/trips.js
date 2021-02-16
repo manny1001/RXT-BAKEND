@@ -37,7 +37,7 @@ class TripsController {
     }
   }
   static async createNewTrip(
-    uuidUser,
+    uuid,
     name,
     cellphone,
     location,
@@ -46,7 +46,7 @@ class TripsController {
   ) {
     try {
       await Trips.create({
-        uuidUser,
+        uuidUser: uuid,
         name,
         cellphone,
         location,

@@ -61,7 +61,8 @@ const typeDefs = gql`
     video: String
     uuidtrip: String!
     uuid: String
-    user: [User]
+    user: User
+    createdAt: String
   }
   type UserHistory {
     uuidTrip: String
@@ -83,7 +84,7 @@ const typeDefs = gql`
     currentUser: User
     currentDriver: Driver
     allDriver: [Driver]
-    driversLocation(uuidUser: String!, uuidTrip: String!): [Trips]
+    driversLocation(uuidUser: String, uuidTrip: String): [Trips]
     messages(uuidtrip: String, uuid: String): [Message]
     getRequestHistory(uuidUser: String!): [UserHistory]
     getDriverRequestResponse(uuidUser: String!): Trips
