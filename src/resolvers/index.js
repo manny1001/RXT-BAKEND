@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const UserController = require("../controllers/user");
 const DriverController = require("../controllers/driver");
 const TripsController = require("../controllers/trips");
+const MessageController = require("../controllers/message");
 require("dotenv").config();
 module.exports = [
   {
@@ -21,24 +22,29 @@ module.exports = [
       driversLocation: async (_, { uuidUser }, { user }) => {
         if (!user) throw new Error("You are not authenticated!");
         return await TripsController.getDriversLocation(uuidUser);
-        /* try {
-          const userTrip = await models.Trips.findAll({
-            limit: 1,
-            where: {
-              uuidUser,
-              status: ["Pending Payment", "Declined"],
-            },
-            order: [["updatedAt", "DESC"]],
-          });
-  
-          if (userTrip[0] === undefined) return {};
-          return userTrip[0].dataValues;
-        } catch (error) {
-          throw new Error(error.message);
-        } */
+      },
+      getDriverRequestResponse: async (_, { uuidUser }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getRequestResponse(uuidUser);
+      },
+      getRequestHistory: async (_, { uuidUser }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getHistory(uuidUser);
+      },
+      getCurrentRequest: async (_, { uuidDriver }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getRequest(uuidDriver);
+      },
+      messages: async (_, { uuidtrip, uuid }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await MessageController.getMessage(uuidtrip, uuid);
       },
     },
-
+    Message: {
+      user: async (Message) => {
+        MessageController.getUserMessage(Message);
+      },
+    },
     Mutation: {
       login: async (_, { cellphone, type }) => {
         console.log(cellphone, type);

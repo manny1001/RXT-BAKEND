@@ -54,11 +54,40 @@ const typeDefs = gql`
     driverremainingtime: String
     drivercustomerarrivaltime: String
   }
+  type UserHistory {
+    uuidTrip: String
+    updatedAt: String
+    createdAt: String
+    location: String
+    destination: String
+    tip: String
+    status: String
+    totalAmount: String
+    paymentmethod: String
+    rating: String
+    drivername: String
+    driversurname: String
+    driverregistration: String
+    model: String
+  }
+  type Message {
+    _id: String!
+    text: String!
+    image: String
+    video: String
+    uuidtrip: String!
+    uuid: String
+    user: User
+  }
   type Query {
     currentUser: User
     currentDriver: Driver
     allDriver: [Driver]
-    driversLocation(uuidUser: String!): Trips
+    driversLocation(uuidUser: String!): [Trips]
+    getDriverRequestResponse(uuidUser: String!): Trips
+    getRequestHistory(uuidUser: String!): [UserHistory]
+    getCurrentRequest(uuidDriver: String!): [Trips]
+    messages(uuidtrip: String, uuid: String): [Message]
   }
   type UserAuthPayload {
     token: String!
