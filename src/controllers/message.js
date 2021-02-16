@@ -1,10 +1,20 @@
-const { Message, User, Driver } = require("../models");
-const jsonwebtoken = require("jsonwebtoken");
+const { Message, User, Driver } = require("../models/");
 require("dotenv").config();
-const { JWT_SECRET, PORT } = process.env;
 class MessageController {
-  static async(uuidtrip, uuid) {}
-  static async getUserMessage() {
+  static async getMessages(uuidtrip, uuid) {
+    try {
+      const currentMessage = await Message.findAll({
+        where: {
+          uuidtrip,
+        },
+      });
+
+      return currentMessage;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  static async getUserMessage(Message) {
     try {
       const user = await User.findAll({
         limit: 1,
@@ -28,6 +38,21 @@ class MessageController {
     } catch (error) {
       throw new Error(error.message);
     }
+  }
+  static async postMessage(text, image, video, uuid, uuidtrip) {
+    try {
+      await Message.create({
+        text,
+        image,
+        video,
+        uuid: uuid,
+        uuidtrip: uuidtrip,
+      });
+      return "Message Sent";
+    } catch (error) {
+      throw new Error(error.message);
+    }
+    s;
   }
 }
 
