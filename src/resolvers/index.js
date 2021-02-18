@@ -36,6 +36,18 @@ module.exports = [
         if (!user) throw new Error("You are not authenticated!");
         return await TripsController.getRequestResponse(uuidUser);
       },
+      getCardPaymentResult: async (
+        _,
+        { uuidTrip, totalAmount, paymentMethod },
+        { user }
+      ) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getCardPaymentResult(
+          uuidTrip,
+          totalAmount,
+          paymentMethod
+        );
+      },
     },
     Message: {
       user: async (Message) => {

@@ -88,6 +88,11 @@ const typeDefs = gql`
     messages(uuidtrip: String, uuid: String): [Message]
     getRequestHistory(uuidUser: String!): [UserHistory]
     getDriverRequestResponse(uuidUser: String!): Trips
+    getCardPaymentResult(
+      uuidTrip: String!
+      totalAmount: String!
+      paymentMethod: String!
+    ): [Trips]
   }
   type UserAuthPayload {
     token: String!

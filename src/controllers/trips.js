@@ -139,6 +139,23 @@ class TripsController {
       throw new Error(error.message);
     }
   }
+  static async getCardPaymentResult(uuidTrip, totalAmount) {
+    console.log(uuidTrip, totalAmount);
+    try {
+      return await Trips.findAll({
+        limit: 1,
+        where: {
+          uuidTrip,
+          totalAmount,
+          paymentMethod: "Card",
+          status: "Paid,WaitingDriver",
+        },
+        order: [["createdAt", "DESC"]],
+      });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
 }
 
 module.exports = TripsController;
