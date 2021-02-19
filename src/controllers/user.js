@@ -74,3 +74,5 @@ class UserController {
 }
 
 module.exports = UserController;
+
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NTMsI…4NjR9.HwvoWJInYPgRMzLlNb5_7DMwFQz-DAukbdsxP4TPSuI

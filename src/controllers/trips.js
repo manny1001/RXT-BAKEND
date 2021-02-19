@@ -37,7 +37,7 @@ class TripsController {
     }
   }
   static async createNewTrip(
-    uuidUser,
+    uuid,
     name,
     cellphone,
     location,
@@ -46,7 +46,7 @@ class TripsController {
   ) {
     try {
       await Trips.create({
-        uuidUser,
+        uuidUser: uuid,
         name,
         cellphone,
         location,
@@ -135,6 +135,23 @@ class TripsController {
 
       if (userTrip[0] === undefined) return {};
       return userTrip[0].dataValues;
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+  static async getCardPaymentResult(uuidTrip, totalAmount) {
+    console.log(uuidTrip, totalAmount);
+    try {
+      return await Trips.findAll({
+        limit: 1,
+        where: {
+          uuidTrip,
+          totalAmount,
+          paymentMethod: "Card",
+          status: ["Paid,WaitingDriver", "Unsuccessful"],
+        },
+        order: [["createdAt", "DESC"]],
+      });
     } catch (error) {
       throw new Error(error.message);
     }
