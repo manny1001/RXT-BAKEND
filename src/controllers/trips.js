@@ -148,7 +148,7 @@ class TripsController {
           uuidTrip,
           totalAmount,
           paymentMethod: "Card",
-          status: "Paid,WaitingDriver",
+          status: ["Paid,WaitingDriver", "Unsuccessful"],
         },
         order: [["createdAt", "DESC"]],
       });
