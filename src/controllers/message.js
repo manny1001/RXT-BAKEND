@@ -2,8 +2,6 @@ const { Message, User, Driver } = require("../models/");
 require("dotenv").config();
 class MessageController {
   static async getMessages(uuidtrip, uuid) {
-    console.log(uuidtrip, uuid, "hehehehe");
-
     try {
       const currentMessage = await Message.findAll({
         where: {

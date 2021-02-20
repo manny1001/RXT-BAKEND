@@ -97,6 +97,17 @@ const typeDefs = gql`
   type UserAuthPayload {
     token: String!
   }
+  type Result {
+    code: String
+    description: String
+  }
+  type CheckoutResponse {
+    result: Result
+    buildNumber: String
+    timeStamp: String
+    ndc: String
+    id: String
+  }
   type Mutation {
     login(cellphone: String!, type: String!): UserAuthPayload!
     updateProfile(
@@ -131,6 +142,7 @@ const typeDefs = gql`
       status: String
       uuidTrip: String
     ): String
+
     postMessage(
       text: String!
       image: String
@@ -139,6 +151,7 @@ const typeDefs = gql`
       uuidtrip: String!
     ): String
     alertEmail(uuidTrip: String, message: String, status: String): String
+    createCheckoutSession: CheckoutResponse
   }
 `;
 
