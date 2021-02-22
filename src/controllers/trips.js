@@ -95,6 +95,8 @@ class TripsController {
             paymentMethod === "Card"
               ? "Paid,WaitingDriver"
               : "Confirmed,WaitingDriver",
+          driverduration: "200",
+          driverremainingtime: "60",
         },
         { where: { uuidTrip: uuidTrip } }
       );
