@@ -11,7 +11,7 @@ const DriverController = require("./controllers/driver");
 const app = express();
 app.use(cors());
 
-const { JWT_SECRET, PORT } = process.env;
+const { JWT_SECRET, RDS_PORT, PORT } = process.env;
 
 const getUserFromToken = (token) =>
   new Promise((resolve, reject) => {
@@ -62,8 +62,7 @@ const server = new ApolloServer({
     };
   },
 });
-const port = PORT || 8000;
-
+const port = /* PORT ||  */ 22000;
 server.listen({ port }, () => {
   console.log(`Apollo Server running on http://localhost:${port}/graphql`);
 });

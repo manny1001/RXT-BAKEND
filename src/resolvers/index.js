@@ -1,10 +1,9 @@
-const bcrypt = require("bcryptjs");
-const jsonwebtoken = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const UserController = require("../controllers/user");
 const DriverController = require("../controllers/driver");
 const TripsController = require("../controllers/trips");
 const MessagesController = require("../controllers/message");
+const CheckOutController = require("../controllers/checkout");
 
 require("dotenv").config();
 module.exports = [
@@ -66,7 +65,8 @@ module.exports = [
       },
       updateProfile: async (
         _,
-        { uuidUser, name, email, cellphone, homeaddress, workaddress }
+        { uuidUser, name, email, cellphone, homeaddress, workaddress },
+        { user }
       ) => {
         UserController.updateProfile(
           uuidUser,
@@ -92,7 +92,7 @@ module.exports = [
           uuidDriver
         );
       },
-      selectNewDriver: async (_, { driveruuid, useruuid }, {}) => {
+      selectNewDriver: async (_, { driveruuid, useruuid }, { user }) => {
         return await TripsController.createNewDriver(driveruuid, useruuid);
       },
       TripCardPaymentCashConfirmation: async (
@@ -106,13 +106,21 @@ module.exports = [
           paymentMethod
         );
       },
-      UpdateDriverStatus: async (_, { driveruuid, status }, {}) => {
+      UpdateDriverStatus: async (_, { driveruuid, status }, { user }) => {
         return await DriverController.updateStatus(driveruuid, status);
       },
-      newRequestResponse: async (_, { uuidDriver, status, uuidTrip }, {}) => {
+      newRequestResponse: async (
+        _,
+        { uuidDriver, status, uuidTrip },
+        { user }
+      ) => {
         return TripsController.requestResponse(uuidDriver, status, uuidTrip);
       },
-      postMessage: async (_, { text, image, video, uuid, uuidtrip }, {}) => {
+      postMessage: async (
+        _,
+        { text, image, video, uuid, uuidtrip },
+        { user }
+      ) => {
         return await MessagesController.postMessage(
           text,
           image,
@@ -121,7 +129,7 @@ module.exports = [
           uuidtrip
         );
       },
-      alertEmail: async (_, { uuidTrip, message, status }, {}) => {
+      alertEmail: async (_, {}, { user }) => {
         async function main() {
           const transporter = nodemailer.createTransport({
             service: "gmail",
@@ -149,6 +157,10 @@ module.exports = [
           });
         }
         main();
+      },
+      createCheckoutSession: async (_, { uuidTrip, uuidUser }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await CheckOutController.createCheckoutSession();
       },
     },
   },
