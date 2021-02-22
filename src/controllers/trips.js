@@ -52,7 +52,7 @@ class TripsController {
         location,
         destination,
         uuidDriver,
-        status: "Pending Driver",
+        status: "Pending Payment", //Change to "Pending Driver"
       });
 
       await Driver.update(
