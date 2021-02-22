@@ -62,7 +62,7 @@ const server = new ApolloServer({
     };
   },
 });
-const port = PORT || 1506;
+const port = /* PORT ||  */ 22000;
 server.listen({ port }, () => {
   console.log(`Apollo Server running on http://localhost:${port}/graphql`);
 });

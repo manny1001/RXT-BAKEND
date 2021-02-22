@@ -21,7 +21,7 @@ if (config.use_env_variable) {
     { logging: true }
   );
 } */
-const sequelize = new Sequelize("myapp", "admin", "Emman0099021345", {
+/* const sequelize = new Sequelize("myapp", "admin", "Emman0099021345", {
   host: "driven.cixopu6bar8u.us-east-2.rds.amazonaws.com",
   port: 1506,
   dialect: "mysql",
@@ -32,6 +32,15 @@ const sequelize = new Sequelize("myapp", "admin", "Emman0099021345", {
     evict: 15000,
     acquire: 30000,
   },
+  define: {
+    timestamps: true,
+    freezeTableName: true,
+  },
+}); */
+const sequelize = new Sequelize("myapp", "root", "Emman009902134", {
+  port: 3306,
+  dialect: "mysql",
+
   define: {
     timestamps: true,
     freezeTableName: true,
