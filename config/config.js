@@ -1,10 +1,19 @@
 require("dotenv").config();
 const dbDetails = {
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  host: process.env.DB_HOST,
+  host: "driven.cixopu6bar8u.us-east-2.rds.amazonaws.com",
+  port: "1506",
   dialect: "mysql",
+  pool: {
+    max: 15,
+    min: 5,
+    idle: 20000,
+    evict: 15000,
+    acquire: 30000,
+  },
+  define: {
+    timestamps: true,
+    freezeTableName: true,
+  },
 };
 module.exports = {
   development: dbDetails,

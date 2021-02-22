@@ -9,7 +9,7 @@ const config = require("../../config/config.js")[env];
 
 const db = {};
 
-let sequelize;
+/* let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
@@ -20,8 +20,28 @@ if (config.use_env_variable) {
     config,
     { logging: true }
   );
-}
-
+} */
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USERNAME,
+  process.env.DB_PASSWORD,
+  {
+    host: process.env.DB_HOST,
+    port: process.env.PORT,
+    dialect: process.env.DIALECT,
+    pool: {
+      max: 15,
+      min: 5,
+      idle: 20000,
+      evict: 15000,
+      acquire: 30000,
+    },
+    define: {
+      timestamps: true,
+      freezeTableName: true,
+    },
+  }
+);
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
