@@ -21,27 +21,22 @@ if (config.use_env_variable) {
     { logging: true }
   );
 } */
-const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USERNAME,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.PORT,
-    dialect: process.env.DIALECT,
-    pool: {
-      max: 15,
-      min: 5,
-      idle: 20000,
-      evict: 15000,
-      acquire: 30000,
-    },
-    define: {
-      timestamps: true,
-      freezeTableName: true,
-    },
-  }
-);
+const sequelize = new Sequelize("myapp", "admin", "Emman0099021345", {
+  host: "driven.cixopu6bar8u.us-east-2.rds.amazonaws.com",
+  port: 1506,
+  dialect: "mysql",
+  pool: {
+    max: 15,
+    min: 5,
+    idle: 20000,
+    evict: 15000,
+    acquire: 30000,
+  },
+  define: {
+    timestamps: true,
+    freezeTableName: true,
+  },
+});
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
