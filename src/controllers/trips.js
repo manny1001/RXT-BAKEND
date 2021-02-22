@@ -91,12 +91,18 @@ class TripsController {
         {
           totalAmount,
           paymentmethod: paymentMethod,
+          drivername: "Manfred",
+          driversurname: "Mann",
+          driverregistration: "CX 01 BC GP",
+          model: "Hyundai",
           status:
             paymentMethod === "Card"
               ? "Paid,WaitingDriver"
               : "Confirmed,WaitingDriver",
           driverduration: "200",
           driverremainingtime: "60",
+          driverImage:
+            "https://firebasestorage.googleapis.com/v0/b/shop4-962e4.appspot.com/o/PicsArt_09-23-03.38.25.jpg?alt=media&token=ccd69fd1-d2bc-43f3-b788-63b7ce56d2b8",
         },
         { where: { uuidTrip: uuidTrip } }
       );
