@@ -31,9 +31,9 @@ module.exports = [
         if (!user) throw new Error("You are not authenticated!");
         return await TripsController.getUsersRequestHistory(uuidUser);
       },
-      getDriverRequestResponse: async (_, { uuidUser }, { user }) => {
+      getDriverRequestResponse: async (_, { uuidUser, uuidTrip }, { user }) => {
         if (!user) throw new Error("You are not authenticated!");
-        return await TripsController.getRequestResponse(uuidUser);
+        return await TripsController.getRequestResponse(uuidUser, uuidTrip);
       },
       getCardPaymentResult: async (
         _,
