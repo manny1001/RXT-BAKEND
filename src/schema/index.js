@@ -28,6 +28,7 @@ const typeDefs = gql`
     registration: String
     model: String
     gender: String
+    customers: String
   }
   type Trips {
     id: String
@@ -42,6 +43,7 @@ const typeDefs = gql`
     paymentmethod: String
     status: String
     rating: String
+    urgency: String
     uuidDriver: String
     driversCellphone: String
     driverImage: String
@@ -129,6 +131,7 @@ const typeDefs = gql`
       driversurname: String
       driverregistration: String
       model: String
+      urgency: String
     ): String
     selectNewDriver(driveruuid: String, useruuid: String): String
     TripCardPaymentCashConfirmation(
@@ -152,6 +155,7 @@ const typeDefs = gql`
     ): String
     alertEmail(uuidTrip: String, message: String, status: String): String
     createCheckoutSession: CheckoutResponse
+    newPersonalDriver(driveruuid: String!, customerUUID: String!): String
   }
 `;
 

@@ -80,7 +80,7 @@ module.exports = [
       },
       newTripRequest: async (
         _,
-        { uuid, name, cellphone, location, destination, uuidDriver },
+        { uuid, name, cellphone, location, destination, uuidDriver, urgency },
         {}
       ) => {
         return await TripsController.createNewTrip(
@@ -89,7 +89,8 @@ module.exports = [
           cellphone,
           location,
           destination,
-          uuidDriver
+          uuidDriver,
+          urgency
         );
       },
       selectNewDriver: async (_, { driveruuid, useruuid }, { user }) => {
@@ -161,6 +162,13 @@ module.exports = [
       createCheckoutSession: async (_, { uuidTrip, uuidUser }, { user }) => {
         if (!user) throw new Error("You are not authenticated!");
         return await CheckOutController.createCheckoutSession();
+      },
+      newPersonalDriver: async (_, { driveruuid, customerUUID }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.createPersonalDriver(
+          driveruuid,
+          customerUUID
+        );
       },
     },
   },

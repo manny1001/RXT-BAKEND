@@ -1,4 +1,4 @@
-const { Driver, Trips } = require("../models");
+const { Driver, Trips, User } = require("../models");
 const jsonwebtoken = require("jsonwebtoken");
 require("dotenv").config();
 const { JWT_SECRET, PORT } = process.env;
@@ -44,7 +44,8 @@ class TripsController {
     cellphone,
     location,
     destination,
-    uuidDriver
+    uuidDriver,
+    urgency
   ) {
     try {
       await Trips.create({
@@ -55,6 +56,7 @@ class TripsController {
         destination,
         uuidDriver,
         status: "Pending Payment", //Change to "Pending Driver"
+        urgency,
       });
       const mostRecentRequest = await Trips.findOne({
         where: {
@@ -164,7 +166,6 @@ class TripsController {
     }
   }
   static async getCardPaymentResult(uuidTrip, totalAmount) {
-    console.log(uuidTrip, totalAmount);
     try {
       return await Trips.findAll({
         limit: 1,
@@ -179,6 +180,28 @@ class TripsController {
     } catch (error) {
       throw new Error(error.message);
     }
+  }
+
+  static async createPersonalDriver(driveruuid, customerUUID) {
+    const user = await User.findOne({
+      where: {
+        uuid: customerUUID,
+      },
+    });
+    await Driver.update(
+      {
+        customers: Sequelize.fn(
+          "CONCAT",
+          Sequelize.col("customers"),
+          JSON.stringify(user.dataValues)
+        ),
+      },
+      {
+        where: {
+          uuid: driveruuid,
+        },
+      }
+    );
   }
 }
 
