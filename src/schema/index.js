@@ -87,7 +87,7 @@ const typeDefs = gql`
     driversLocation(uuidUser: String, uuidTrip: String): [Trips]
     messages(uuidtrip: String, uuid: String): [Message]
     getRequestHistory(uuidUser: String!): [UserHistory]
-    getDriverRequestResponse(uuidUser: String!): Trips
+    getDriverRequestResponse(uuidUser: String!, uuidTrip: String!): Trips
     getCardPaymentResult(
       uuidTrip: String!
       totalAmount: String!

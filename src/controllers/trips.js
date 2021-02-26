@@ -2,6 +2,8 @@ const { Driver, Trips } = require("../models");
 const jsonwebtoken = require("jsonwebtoken");
 require("dotenv").config();
 const { JWT_SECRET, PORT } = process.env;
+const Sequelize = require("sequelize");
+const op = Sequelize.Op;
 class TripsController {
   static async getDriversLocation(uuidUser, uuidTrip) {
     try {
@@ -54,7 +56,20 @@ class TripsController {
         uuidDriver,
         status: "Pending Payment", //Change to "Pending Driver"
       });
-
+      const mostRecentRequest = await Trips.findOne({
+        where: {
+          uuidUser: uuid,
+          name,
+          cellphone,
+          location,
+          destination,
+          uuidDriver,
+          status: "Pending Payment",
+          createdAt: {
+            [op.gt]: new Date(Date.now() - 1000),
+          },
+        },
+      });
       await Driver.update(
         {
           status: "Offline",
@@ -64,7 +79,7 @@ class TripsController {
         }
       );
 
-      return "Succesfully Requested, Awaiting Driver Response";
+      return mostRecentRequest && mostRecentRequest.dataValues.uuidTrip;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -130,13 +145,14 @@ class TripsController {
     }
     s;
   }
-  static async getRequestResponse(uuidUser) {
+  static async getRequestResponse(uuidUser, uuidTrip) {
     try {
       const userTrip = await Trips.findAll({
         limit: 1,
         where: {
+          uuidTrip,
           uuidUser,
-          status: ["Pending Payment"],
+          status: ["Pending Payment", "Confirmed,WaitingDriver"],
         },
         order: [["updatedAt", "DESC"]],
       });
