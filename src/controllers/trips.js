@@ -55,7 +55,7 @@ class TripsController {
         location,
         destination,
         uuidDriver,
-        status: "Pending Payment", //Change to "Pending Driver"
+        status: "Pending Driver",
         urgency,
       });
       const mostRecentRequest = await Trips.findOne({
@@ -66,7 +66,7 @@ class TripsController {
           location,
           destination,
           uuidDriver,
-          status: "Pending Payment",
+          status: "Pending Driver",
           createdAt: {
             [op.gt]: new Date(Date.now() - 1000),
           },
@@ -80,7 +80,7 @@ class TripsController {
           where: { uuid: uuidDriver },
         }
       );
-
+      console.log(mostRecentRequest);
       return mostRecentRequest && mostRecentRequest.dataValues.uuidTrip;
     } catch (error) {
       throw new Error(error.message);
@@ -155,6 +155,9 @@ class TripsController {
           uuidTrip,
           uuidUser,
           status: ["Pending Payment", "Confirmed,WaitingDriver"],
+          /* createdAt: {
+            [op.gt]: new Date(Date.now() - 1500),
+          }, */
         },
         order: [["updatedAt", "DESC"]],
       });
@@ -183,17 +186,12 @@ class TripsController {
   }
 
   static async createPersonalDriver(driveruuid, customerUUID) {
-    const user = await User.findOne({
-      where: {
-        uuid: customerUUID,
-      },
-    });
     await Driver.update(
       {
         customers: Sequelize.fn(
           "CONCAT",
           Sequelize.col("customers"),
-          JSON.stringify(user.dataValues)
+          JSON.stringify(customerUUID)
         ),
       },
       {
@@ -202,6 +200,28 @@ class TripsController {
         },
       }
     );
+    return "Successfully created personal driver";
+  }
+  static async getcurrentRequest(uuidDriver) {
+    try {
+      const currentRequest = await Trips.findAll({
+        limit: 1,
+        where: {
+          uuidDriver,
+          status: [
+            "Pending Driver",
+            "Pending Payment",
+            "Paid,WaitingDriver",
+            "On-Route,Pickup",
+            "Confirmed,WaitingDriver",
+          ],
+        },
+      });
+      console.log(currentRequest);
+      return currentRequest;
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }
 

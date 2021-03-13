@@ -37,7 +37,7 @@ if (config.use_env_variable) {
     freezeTableName: true,
   },
 }); */
-const sequelize = new Sequelize("myapp", "Emmanuel", "Emman009902134", {
+const sequelize = new Sequelize("myapp", "root", "Emman009902134", {
   port: 3306,
   dialect: "mysql",
 

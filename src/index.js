@@ -19,6 +19,7 @@ const getUserFromToken = (token) =>
       if (err) {
         return reject(err);
       }
+      console.log(tokenPayload);
 
       if (tokenPayload && tokenPayload.type === "driver") {
         const driver = await DriverController.getDriverById(tokenPayload.id);
@@ -43,11 +44,11 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     if (req.headers) {
       const token = req.get("Authorization") || "";
+
       try {
         const user = token
           ? await getUserFromToken(token.replace("Bearer ", ""))
           : null;
-
         return { user };
       } catch (e) {
         throw new AuthenticationError("Invalid Token");

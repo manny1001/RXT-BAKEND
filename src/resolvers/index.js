@@ -15,6 +15,10 @@ module.exports = [
       currentDriver: async (_, {}, { user }) => {
         return await DriverController.getDriverById(user._id);
       },
+      driver: async (_, { driveruuid }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await DriverController.getAdriver(driveruuid);
+      },
       allDriver: async (_, {}, { user }) => {
         if (!user) throw new Error("You are not authenticated!");
         return await DriverController.getOnlineDrivers();
@@ -46,6 +50,10 @@ module.exports = [
           totalAmount,
           paymentMethod
         );
+      },
+      getCurrentRequest: async (_, { uuidDriver }, { user }) => {
+        if (!user) throw new Error("You are not authenticated!");
+        return await TripsController.getcurrentRequest(uuidDriver);
       },
     },
     Message: {

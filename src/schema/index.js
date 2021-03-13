@@ -85,16 +85,18 @@ const typeDefs = gql`
   type Query {
     currentUser: User
     currentDriver: Driver
+    driver(driveruuid: String): Driver
     allDriver: [Driver]
     driversLocation(uuidUser: String, uuidTrip: String): [Trips]
     messages(uuidtrip: String, uuid: String): [Message]
     getRequestHistory(uuidUser: String!): [UserHistory]
-    getDriverRequestResponse(uuidUser: String!, uuidTrip: String!): Trips
+    getDriverRequestResponse(uuidUser: String!, uuidTrip: String): Trips
     getCardPaymentResult(
       uuidTrip: String!
       totalAmount: String!
       paymentMethod: String!
     ): [Trips]
+    getCurrentRequest(uuidDriver: String!): [Trips]
   }
   type UserAuthPayload {
     token: String!

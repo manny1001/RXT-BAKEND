@@ -60,7 +60,6 @@ class DriverController {
     return await Driver.find({ _id: driverId });
   }
   static async updateStatus(driveruuid, status) {
-    console.log(driveruuid, status);
     try {
       await Driver.update(
         {
@@ -72,6 +71,20 @@ class DriverController {
       );
       return "Succesfully updated";
     } catch {
+      (err) => console.log(err);
+    }
+  }
+  static async getAdriver(driveruuid) {
+    try {
+      const DriverIs = await Driver.findAll({
+        limit: 1,
+        where: {
+          uuid: driveruuid,
+        },
+      });
+
+      return DriverIs[0];
+    } catch (err) {
       (err) => console.log(err);
     }
   }
