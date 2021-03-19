@@ -16,6 +16,8 @@ const { JWT_SECRET, RDS_PORT, PORT } = process.env;
 const getUserFromToken = (token) =>
   new Promise((resolve, reject) => {
     jwt.verify(token, JWT_SECRET, async (err, tokenPayload) => {
+      console.log(token);
+
       if (err) {
         return reject(err);
       }
@@ -44,7 +46,6 @@ const server = new ApolloServer({
   context: async ({ req }) => {
     if (req.headers) {
       const token = req.get("Authorization") || "";
-
       try {
         const user = token
           ? await getUserFromToken(token.replace("Bearer ", ""))
