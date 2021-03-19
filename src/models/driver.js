@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
       registration: { type: DataTypes.STRING },
       model: { type: DataTypes.STRING },
       gender: { type: DataTypes.STRING },
-      customers: { type: DataTypes.STRING },
+      /*      customers: { type: DataTypes.STRING }, */
     },
     {}
   );

@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
       paymentmethod: DataTypes.STRING,
       status: DataTypes.STRING,
       rating: DataTypes.STRING,
-      urgency: DataTypes.STRING,
+      /* urgency: DataTypes.STRING, */
       driversLiveLocation: DataTypes.STRING,
       drivername: DataTypes.STRING,
       uuidDriver: DataTypes.STRING,
