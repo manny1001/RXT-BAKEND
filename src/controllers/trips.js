@@ -44,8 +44,8 @@ class TripsController {
     cellphone,
     location,
     destination,
-    uuidDriver,
-    urgency
+    uuidDriver
+    /*  urgency */
   ) {
     try {
       await Trips.create({
@@ -56,7 +56,7 @@ class TripsController {
         destination,
         uuidDriver,
         status: "Pending Driver",
-        urgency,
+        /*     urgency, */
       });
       const mostRecentRequest = await Trips.findOne({
         where: {

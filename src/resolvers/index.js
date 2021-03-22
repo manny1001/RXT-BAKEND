@@ -97,8 +97,8 @@ module.exports = [
           cellphone,
           location,
           destination,
-          uuidDriver,
-          urgency
+          uuidDriver
+          /*   urgency */
         );
       },
       selectNewDriver: async (_, { driveruuid, useruuid }, { user }) => {
