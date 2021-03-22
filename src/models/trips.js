@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       driverremainingtime: DataTypes.STRING,
       drivercustomerarrivaltime: DataTypes.STRING,
     },
-    {}
+    { freezeTableName: true }
   );
   return Trips;
 };

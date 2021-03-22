@@ -63,7 +63,6 @@ module.exports = [
     },
     Mutation: {
       login: async (_, { cellphone, type }) => {
-        console.log(cellphone, type);
         if (type === "user") {
           return await UserController.userLogin({ cellphone, type });
         }

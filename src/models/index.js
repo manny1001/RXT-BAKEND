@@ -8,8 +8,7 @@ const env = process.env.NODE_ENV || "development";
 const config = require("../../config/config.js")[env];
 
 const db = {};
-
-/* let sequelize;
+let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
@@ -18,34 +17,10 @@ if (config.use_env_variable) {
     config.username,
     config.password,
     config,
-    { logging: true }
+    { logging: true, timestamps: true }
   );
-} */
-const sequelize = new Sequelize("myapp", "admin", "Emman0099021345", {
-  host: "driven.cixopu6bar8u.us-east-2.rds.amazonaws.com",
-  port: 1506,
-  dialect: "mysql",
-  pool: {
-    max: 15,
-    min: 5,
-    idle: 20000,
-    evict: 15000,
-    acquire: 30000,
-  },
-  define: {
-    timestamps: true,
-    freezeTableName: true,
-  },
-});
-/* const sequelize = new Sequelize("myapp", "Emmanuel", "Emman009902134", {
-  port: 3306,
-  dialect: "mysql",
+}
 
-  define: {
-    timestamps: true,
-    freezeTableName: true,
-  },
-}); */
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -65,7 +40,7 @@ Object.keys(db).forEach((modelName) => {
     db[modelName].associate(db);
   }
 });
-
+/* sequelize.sync(); */
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

@@ -22,6 +22,7 @@ class UserController {
         throw new Error(error.message);
       }
     }
+    console.log(user);
     if (user === null) {
       try {
         const user = await User.create({

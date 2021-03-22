@@ -16,12 +16,9 @@ const { JWT_SECRET, RDS_PORT, PORT } = process.env;
 const getUserFromToken = (token) =>
   new Promise((resolve, reject) => {
     jwt.verify(token, JWT_SECRET, async (err, tokenPayload) => {
-      console.log(token);
-
       if (err) {
         return reject(err);
       }
-      console.log(tokenPayload);
 
       if (tokenPayload && tokenPayload.type === "driver") {
         const driver = await DriverController.getDriverById(tokenPayload.id);

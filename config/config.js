@@ -1,7 +1,7 @@
 require("dotenv").config();
 const dbDetails = {
   username: "root",
-  password: "Emman0099021345",
+  password: "Emman009902134",
   database: "myapp",
   host: "localhost",
   dialect: "mysql",

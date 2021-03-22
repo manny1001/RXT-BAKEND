@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
     },
-    {}
+    { freezeTableName: true }
   );
   User.find = async function ({ _id = null }) {
     const user = await User.findOne({

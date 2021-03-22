@@ -42,7 +42,8 @@ module.exports = (sequelize, DataTypes) => {
       gender: { type: DataTypes.STRING },
       /*      customers: { type: DataTypes.STRING }, */
     },
-    {}
+
+    { freezeTableName: true }
   );
   Driver.find = async function ({ _id = null }) {
     const driver = await Driver.findOne({

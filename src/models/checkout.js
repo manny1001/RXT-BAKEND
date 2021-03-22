@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
     },
-    {}
+    { freezeTableName: true }
   );
 
   return Checkout;
