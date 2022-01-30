@@ -5,8 +5,7 @@ const { JWT_SECRET, PORT } = process.env;
 class UserController {
   static async userLogin({ cellphone, type }) {
     const user = await User.findOne({ where: { cellphone } });
-
-    if (user !== null) {
+    if (user) {
       try {
         const token = jsonwebtoken.sign(
           { id: user.dataValues._id, type },
@@ -15,14 +14,11 @@ class UserController {
             expiresIn: "3d",
           }
         );
-        return {
-          token,
-        };
+        return { user, token };
       } catch (error) {
         throw new Error(error.message);
       }
     }
-    console.log(user);
     if (user === null) {
       try {
         const user = await User.create({
@@ -35,14 +31,12 @@ class UserController {
             expiresIn: "3d",
           }
         );
-        return {
-          token,
-        };
+        return { user, token };
       } catch (error) {
         throw new Error(error.message);
       }
     }
-    return user;
+    /*    return user; */
   }
   static async getUserById(userId) {
     return await User.find({ _id: userId });

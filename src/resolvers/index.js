@@ -10,6 +10,7 @@ module.exports = [
   {
     Query: {
       currentUser: async (_, {}, { user }) => {
+        console.log(user);
         return await UserController.getUserById(user._id);
       },
       currentDriver: async (_, {}, { user }) => {
@@ -63,6 +64,7 @@ module.exports = [
     },
     Mutation: {
       login: async (_, { cellphone, type }) => {
+
         if (type === "user") {
           return await UserController.userLogin({ cellphone, type });
         }

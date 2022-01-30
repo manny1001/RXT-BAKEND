@@ -26,11 +26,9 @@ class DriverController {
     }
     if (driver === null) {
       try {
-        const driver = await Driver.create({
-          cellphone,
-        });
+        await Driver.create({ _id: 2, cellphone });
         const token = jsonwebtoken.sign(
-          { id: driver.dataValues._id, type: "driver" },
+          { _id: 1, type: "driver" },
           JWT_SECRET,
           {
             expiresIn: "3d",

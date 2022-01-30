@@ -80,7 +80,6 @@ class TripsController {
           where: { uuid: uuidDriver },
         }
       );
-      console.log(mostRecentRequest);
       return mostRecentRequest && mostRecentRequest.dataValues.uuidTrip;
     } catch (error) {
       throw new Error(error.message);
