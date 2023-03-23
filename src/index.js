@@ -1,7 +1,7 @@
 require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
-const { ApolloServer, AuthenticationError } = require("apollo-server");
+const { ApolloServer, AuthenticationError } = require("apollo-server-express");
 const jwt = require("jsonwebtoken");
 const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
@@ -35,7 +35,8 @@ const getUserFromToken = (token) =>
     });
   });
 
-const server = new ApolloServer({
+const apolloServer = new ApolloServer({
+  cors: false,
   introspection: true,
   playground: true,
   typeDefs,
@@ -61,10 +62,11 @@ const server = new ApolloServer({
     };
   },
 });
-//For LocalHost
-const port = 22000;
-// For Server
-/* const port = PORT; */
-server.listen({ port }, () => {
-  console.log(`Apollo Server running on http://localhost:${port}/graphql`);
+
+apolloServer.start().then((res) => {
+  apolloServer.applyMiddleware({ app });
+  app.listen({ port: 22000 }, () =>
+    console.log(`Apollo Server running on http://localhost:22000/graphql`)
+  );
 });
+
