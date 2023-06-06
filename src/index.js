@@ -62,11 +62,10 @@ const apolloServer = new ApolloServer({
     };
   },
 });
-
+var port = process.env.PORT || 22000;
 apolloServer.start().then((res) => {
   apolloServer.applyMiddleware({ app });
-  app.listen({ port: 22000 }, () =>
-    console.log(`Apollo Server running on http://localhost:22000/graphql`)
+  app.listen(port, () =>
+    console.log(`Apollo Server running on http://localhost:${port}/graphql`)
   );
 });
-
