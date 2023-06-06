@@ -216,7 +216,7 @@ class TripsController {
           ],
         },
       });
-      console.log(currentRequest);
+      console.log("currentRequest",currentRequest);
       return currentRequest;
     } catch (error) {
       throw new Error(error.message);
