@@ -6,7 +6,8 @@
   "scripts": {
     "migrate": " sequelize db:migrate",
     "dev": "nodemon src/index.js",
-    "start": "nodemon src/index"
+    "start": "nodemon src/index",
+    "heroku-postbuild": "npm install --prefix client && npm run build --prefix client"
   },
   "author": "",
   "license": "ISC",
