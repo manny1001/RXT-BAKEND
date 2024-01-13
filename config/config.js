@@ -1,5 +1,13 @@
 require("dotenv").config();
-const dbDetails = {
+const dbDevelopment = {
+  username: "admin",
+  password: "Emman0099012",
+  database: "myapp",
+  host: "localhost",
+
+  dialect: "mysql",
+};
+const dbProduction = {
   username: "admin",
   password: "Emman0099012",
   database: "myapp",
@@ -7,8 +15,6 @@ const dbDetails = {
   dialect: "mysql",
 };
 module.exports = {
-  development: dbDetails,
-  production: dbDetails,
+  development: dbDevelopment,
+  production: dbProduction,
 };
-
-

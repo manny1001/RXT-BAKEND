@@ -3,8 +3,10 @@ module.exports = (sequelize, DataTypes) => {
     "User",
     {
       _id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
+
       },
       uuid: {
         type: DataTypes.UUID,

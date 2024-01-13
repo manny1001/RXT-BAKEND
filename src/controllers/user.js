@@ -20,10 +20,13 @@ class UserController {
       }
     }
     if (user === null) {
+      console.log("we are here login create new");
+
       try {
         const user = await User.create({
           cellphone,
         });
+        console.log("user", user);
         const token = jsonwebtoken.sign(
           { id: user.dataValues._id, type: "user" },
           process.env.JWT_SECRET,
