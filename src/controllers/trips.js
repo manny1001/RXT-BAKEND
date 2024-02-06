@@ -103,20 +103,30 @@ class TripsController {
   }
   static async PayOrConfirm(uuidTrip, totalAmount, paymentMethod) {
     try {
+      const currentRequest = await Trips.findOne({
+        where: { uuidTrip: uuidTrip },
+      });
+      const uuidDriver = currentRequest.dataValues.uuidDriver;
+      const currentDriver = await Driver.findOne({
+        limit: 1,
+        where: {
+          uuid: uuidDriver,
+        },
+      });
       await Trips.update(
         {
           totalAmount,
           paymentmethod: paymentMethod,
-          drivername: "Manfred",
-          driversurname: "Mann",
-          driverregistration: "CX 01 BC GP",
-          model: "Hyundai",
+          drivername: currentDriver.name,
+          driversurname: currentDriver.surname,
+          driverregistration: currentDriver.registration,
+          model: currentDriver.model,
           status:
             paymentMethod === "Card"
               ? "Paid,WaitingDriver"
               : "Confirmed,WaitingDriver",
-          driverduration: "200",
-          driverremainingtime: "60",
+          driverduration: null,
+          driverremainingtime: null,
           driverImage:
             "https://firebasestorage.googleapis.com/v0/b/shop4-962e4.appspot.com/o/PicsArt_09-23-03.38.25.jpg?alt=media&token=ccd69fd1-d2bc-43f3-b788-63b7ce56d2b8",
         },
@@ -127,7 +137,7 @@ class TripsController {
       (err) => console.log(err);
     }
   }
-  static async requestResponse(uuidDriver, status, uuidTrip) {
+  static async updateRequestStatus(uuidDriver, status, uuidTrip) {
     try {
       await Trips.update(
         {
@@ -144,12 +154,12 @@ class TripsController {
     } catch {
       (err) => console.log(err);
     }
-    s;
   }
   static async getRequestResponse(uuidUser, uuidTrip) {
+    console.log("DeTAILS", uuidUser, uuidTrip);
+
     try {
-      const userTrip = await Trips.findAll({
-        limit: 1,
+      const userTrip = await Trips.findOne({
         where: {
           uuidTrip,
           uuidUser,
@@ -160,9 +170,8 @@ class TripsController {
         },
         order: [["updatedAt", "DESC"]],
       });
-
-      if (userTrip[0] === undefined) return {};
-      return userTrip[0].dataValues;
+      console.log(userTrip);
+      return userTrip;
     } catch (error) {
       throw new Error(error.message);
     }
@@ -216,7 +225,7 @@ class TripsController {
           ],
         },
       });
-      console.log("currentRequest",currentRequest);
+      console.log("currentRequest", currentRequest);
       return currentRequest;
     } catch (error) {
       throw new Error(error.message);

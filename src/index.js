@@ -7,6 +7,7 @@ const typeDefs = require("./schema");
 const resolvers = require("./resolvers");
 const UserController = require("./controllers/user");
 const DriverController = require("./controllers/driver");
+const { networkInterfaces } = require("os");
 
 const app = express();
 app.use(cors());
@@ -62,10 +63,31 @@ const apolloServer = new ApolloServer({
     };
   },
 });
+
+const nets = networkInterfaces();
+const results = []; // Or just '{}', an empty object
+
+for (const name of Object.keys(nets)) {
+  for (const net of nets[name]) {
+    // Skip over non-IPv4 and internal (i.e. 127.0.0.1) addresses
+    // 'IPv4' is in Node <= 17, from 18 it's a number 4 or 6
+    const familyV4Value = typeof net.family === "string" ? "IPv4" : 4;
+    if (net.family === familyV4Value && !net.internal) {
+      if (!results[name]) {
+        results[name] = [];
+      }
+      results[name].push(net.address);
+    }
+  }
+}
+
 var port = process.env.PORT || 22000;
 apolloServer.start().then((res) => {
+  console.log(results["Wi-Fi"][0]);
   apolloServer.applyMiddleware({ app });
   app.listen(port, () =>
-    console.log(`Apollo Server running on http://localhost:${port}/graphql`)
+    console.log(
+      `Apollo Server running on http://localhost:3307/graphql`
+    )
   );
 });

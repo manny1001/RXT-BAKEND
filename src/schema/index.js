@@ -140,7 +140,7 @@ const typeDefs = gql`
       paymentMethod: String
     ): String
     UpdateDriverStatus(driveruuid: String, status: String): String
-    newRequestResponse(
+    updateRequestStatus(
       uuidDriver: String
       status: String
       uuidTrip: String

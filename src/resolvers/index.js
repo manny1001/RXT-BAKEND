@@ -119,12 +119,12 @@ module.exports = [
       UpdateDriverStatus: async (_, { driveruuid, status }, { user }) => {
         return await DriverController.updateStatus(driveruuid, status);
       },
-      newRequestResponse: async (
+      updateRequestStatus: async (
         _,
         { uuidDriver, status, uuidTrip },
         { user }
       ) => {
-        return TripsController.requestResponse(uuidDriver, status, uuidTrip);
+        return TripsController.updateRequestStatus(uuidDriver, status, uuidTrip);
       },
       postMessage: async (
         _,
