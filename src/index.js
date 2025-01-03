@@ -11,7 +11,20 @@ const { networkInterfaces } = require("os");
 
 const app = express();
 app.use(cors());
-
+// Configure CORS for specific routes
+app.use(
+  "/graphql",
+  cors({
+    origin: ["http://192.168.1.3:8081", "https://studio.apollographql.com"],
+    credentials: true, // Use true if you need to allow credentials
+    methods: ["GET", "POST", "OPTIONS"], // Allow necessary HTTP methods
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization", // Allow token-based authentication headers
+      "Access-Control-Allow-Origin", // Remove this if unnecessary
+    ],
+  })
+);
 const { JWT_SECRET, RDS_PORT, PORT } = process.env;
 
 const getUserFromToken = (token) =>
@@ -37,7 +50,7 @@ const getUserFromToken = (token) =>
   });
 
 const apolloServer = new ApolloServer({
-  cors: false,
+  cors: true,
   introspection: true,
   playground: true,
   typeDefs,
@@ -80,10 +93,10 @@ for (const name of Object.keys(nets)) {
     }
   }
 }
-
+const wifiKeys = Object.keys(results).filter(key => key.startsWith('WiFi'));
+wifiKeys.forEach(key => console.log(results[key]));
 var port = process.env.PORT || 22000;
 apolloServer.start().then((res) => {
-  console.log(results["Wi-Fi"][0]);
   apolloServer.applyMiddleware({ app });
   app.listen(port, () =>
     console.log(
